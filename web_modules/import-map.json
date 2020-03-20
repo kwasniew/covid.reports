@@ -1,0 +1,8 @@
+{
+  "imports": {
+    "@hyperapp/events": "./@hyperapp/events.js",
+    "@hyperapp/http": "./@hyperapp/http.js",
+    "htm": "./htm.js",
+    "hyperapp": "./hyperapp.js"
+  }
+}
