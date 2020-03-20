@@ -7,11 +7,22 @@
   "dependencies": {
     "@hyperapp/events": "0.0.4",
     "@hyperapp/http": "0.0.2",
+    "chart.js": "2.9.3",
     "htm": "3.0.3",
     "hyperapp": "2.0.4"
   },
   "devDependencies": {
     "prettier": "1.19.1",
     "snowpack": "1.6.0"
+  },
+  "snowpack": {
+    "webDependencies": [
+      "@hyperapp/events",
+      "@hyperapp/http",
+      "htm",
+      "hyperapp",
+      "chart.js/dist/Chart.js",
+      "chart.js/dist/Chart.js"
+    ]
   }
 }
