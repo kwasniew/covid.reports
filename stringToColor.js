@@ -1,15 +1,6 @@
-export function stringToHex(str) {
-  var hash = 0;
-  for (var i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  var colour = "#";
-  for (var i = 0; i < 3; i++) {
-    var value = (hash >> (i * 8)) & 0xff;
-    colour += ("00" + value.toString(16)).substr(-2);
-  }
-  return colour;
-}
+import stc from "./web_modules/string-to-color.js";
+
+export const stringToHex = stc;
 
 function hexToRgb(hex) {
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -23,5 +14,5 @@ function hexToRgb(hex) {
 }
 
 export function stringToRGB(str) {
-  return hexToRgb(stringToHex(str));
+  return hexToRgb(stc(str));
 }

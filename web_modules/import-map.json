@@ -4,6 +4,7 @@
     "@hyperapp/http": "./@hyperapp/http.js",
     "chart.js/dist/Chart.js": "./chart.js/dist/Chart.js",
     "htm": "./htm.js",
-    "hyperapp": "./hyperapp.js"
+    "hyperapp": "./hyperapp.js",
+    "string-to-color": "./string-to-color.js"
   }
 }

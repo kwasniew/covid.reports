@@ -1,12 +1,4 @@
-var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-function commonjsRequire () {
-	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
-}
-
-function createCommonjsModule(fn, module) {
-	return module = { exports: {} }, fn(module, module.exports), module.exports;
-}
+import { c as createCommonjsModule, a as commonjsGlobal, b as commonjsRequire } from '../../common/_commonjsHelpers-b541825b.js';
 
 var moment = createCommonjsModule(function (module, exports) {
 (function (global, factory) {

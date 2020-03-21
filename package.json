@@ -8,9 +8,9 @@
     "@hyperapp/events": "0.0.4",
     "@hyperapp/http": "0.0.2",
     "chart.js": "2.9.3",
-    "country-code-lookup": "0.0.16",
     "htm": "3.0.3",
-    "hyperapp": "2.0.4"
+    "hyperapp": "2.0.4",
+    "string-to-color": "2.1.3"
   },
   "devDependencies": {
     "prettier": "1.19.1",
@@ -22,6 +22,7 @@
       "@hyperapp/http",
       "htm",
       "hyperapp",
+      "string-to-color",
       "chart.js/dist/Chart.js",
       "chart.js/dist/Chart.js"
     ]
