@@ -8,8 +8,8 @@
     "lodash.dropwhile": "./lodash.dropwhile.js",
     "lodash.mapvalues": "./lodash.mapvalues.js",
     "lodash.orderby": "./lodash.orderby.js",
-    "lodash.unionby": "./lodash.unionby.js",
     "lodash.unzip": "./lodash.unzip.js",
+    "lodash.without": "./lodash.without.js",
     "lodash.zip": "./lodash.zip.js",
     "string-to-color": "./string-to-color.js"
   }

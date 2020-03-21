@@ -47,13 +47,14 @@ const updateChart = state => [
 const toChartData = state => {
   const datasets = state.selectedCountries.map(name => {
     const { r, g, b } = stringToRGB(name);
-    return {
+    return state.report[name] ? {
       label: name,
       data: state.report[name].map(confirmed),
       backgroundColor: [`rgba(${r}, ${g}, ${b}, 0.2)`],
       borderColor: [`rgba(${r}, ${g}, ${b}, 1)`]
-    };
-  });
+    } : null;
+  }).filter(x => x);
+
   const days = dropWhile(zip(...datasets.map(set => set.data)), cases =>
     cases.every(x => x === 0)
   );
@@ -69,10 +70,10 @@ const toChartData = state => {
     data: cleanData[i]
   }));
 
-  const [firstCountry] = state.selectedCountries;
+  const [first] = datasets;
   return {
-    labels: firstCountry
-      ? state.report[firstCountry].map(stats => stats.date).slice(-length)
+    labels: first
+      ? state.report[first.label].map(stats => stats.date).slice(-length)
       : [],
     datasets: cleanDatasets
   };
@@ -253,14 +254,14 @@ app({
   view: state =>
     console.log(state) ||
     html`
-      <div>
-      <div>
-          <h4>Select country from a map</h4>
+      <div class="mt-2">
+      <div class="mt-2">
+          <h4 class="mt-2">Select country from a map</h4>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1001">
             ${Object.keys(countries).map(countrySvg(state))}
           </svg>
         </div>
-        <div>
+        <div class="mt-2">
          <h4>Or from the list</h4>
           <div class=" form-group input-group">
             <select
