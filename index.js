@@ -228,6 +228,18 @@ const sorted = ({ report, sortOrder: [sortBy, asc] }) =>
     [asc]
   );
 
+
+const sortIcon = current => ({sortOrder: [name, asc]}) => {
+  if(current !== name) {
+    return html``;
+  }
+  return asc === "asc" ? html`▲` : html`▼`;
+};
+
+const tableHeader = (name, text) => state => {
+  return  html`<th onclick=${SortBy(name)}><span>${text} ${sortIcon(name)(state)}</span></th>`;
+};
+
 app({
   init: [
     {
@@ -261,7 +273,7 @@ app({
             </select>
             <button class="btn" onclick=${AddSelectedCountry}>Select</button>
           </div>
-          <h4>Or from the table</h4>
+          
           <div>
             <ul>
               ${Array.from(state.selectedCountries).map(
@@ -278,17 +290,17 @@ app({
             </ul>
           </div>
         </div>
-
+        <h4>Or from the table</h4>
         <table class="table">
           <tr>
-            <th onclick=${SortBy("name")}>Country</th>
-            <th onclick=${SortBy("weeklyGrowth")}>Weekly Growth Rate</th>
-            <th onclick=${SortBy("totalCases")}>Total cases</th>
-            <th onclick=${SortBy("lastWeekCases")}>Last week cases</th>
+            ${tableHeader("name", "Country")(state)}
+            ${tableHeader("weeklyGrowth", "Weekly Growth Rate")(state)}
+            ${tableHeader("totalCases", "Total cases")(state)}
+            ${tableHeader("lastWeekCases", "Last week cases")(state)}
           </tr>
           ${sorted(state).map(
             ({ name, weeklyGrowth, totalCases, lastWeekCases }) => html`
-              <tr
+              <tr class="c-hand"
                 onclick=${countryAction(state)(name)}
                 style=${countryHighlight(state)(name)}
               >
