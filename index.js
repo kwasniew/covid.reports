@@ -119,6 +119,7 @@ const SelectCountry = (state, currentCountry) => ({
 const AddCountry = currentCountry => state => {
   const newState = {
     ...state,
+    currentCountry,
     selectedCountries: unique([...state.selectedCountries, currentCountry])
   };
   return [newState, [updateChart(newState)]];
@@ -170,23 +171,23 @@ const selectedOption = (selected, name) =>
 const isActive = state => country => state.selectedCountries.includes(country);
 
 const countryHighlight = state => country => {
-    const isCountryActive = isActive(state)(country);
+  const isCountryActive = isActive(state)(country);
 
-    if(isCountryActive) {
-        return {"font-weight": "bold", "color": stringToHex(country)}
-    } else {
-        return {};
-    }
+  if (isCountryActive) {
+    return { "font-weight": "bold", color: stringToHex(country) };
+  } else {
+    return {};
+  }
 };
 
 const countryAction = state => country => {
-    const isCountryActive = isActive(state)(country);
+  const isCountryActive = isActive(state)(country);
 
-    if(isCountryActive) {
-        return RemoveCountry(country);
-    } else {
-        return AddCountry(country);
-    }
+  if (isCountryActive) {
+    return RemoveCountry(country);
+  } else {
+    return AddCountry(country);
+  }
 };
 
 const countrySvg = state => country => {
@@ -215,14 +216,14 @@ const countrySvg = state => country => {
 
 const sorted = ({ report, sortOrder: [sortBy, asc] }) =>
   orderBy(
-    Object.entries(
-      report
-    ).map(([name, { weeklyGrowth, totalCases, lastWeekCases }]) => ({
-      name,
-      weeklyGrowth,
-      totalCases,
-      lastWeekCases
-    })),
+    Object.entries(report).map(
+      ([name, { weeklyGrowth, totalCases, lastWeekCases }]) => ({
+        name,
+        weeklyGrowth,
+        totalCases,
+        lastWeekCases
+      })
+    ),
     [sortBy],
     [asc]
   );
@@ -241,26 +242,44 @@ app({
     console.log(state) ||
     html`
       <div>
-        <select oninput=${[SelectCountry, targetValue]} class="countries">
-          ${sortCountryNames(state.report).map(name =>
-            selectedOption(state.currentCountry, name)
-          )}
-        </select>
-        <button onclick=${AddSelectedCountry}>Select</button>
-        <ul>
-          ${Array.from(state.selectedCountries).map(
-            name =>
-              html`
-                <li onclick=${countryAction(state)(name)} style=${countryHighlight(state)(name)}>${name} (x)</li>
-              `
-          )}
-        </ul>
+      <div>
+          <h4>Select country from a map</h4>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1001">
+            ${Object.keys(countries).map(countrySvg(state))}
+          </svg>
+        </div>
+        <div>
+         <h4>Or from the list</h4>
+          <div class=" form-group input-group">
+            <select
+              oninput=${[SelectCountry, targetValue]}
+              class="countries form-select"
+            >
+              ${sortCountryNames(state.report).map(name =>
+                selectedOption(state.currentCountry, name)
+              )}
+            </select>
+            <button class="btn" onclick=${AddSelectedCountry}>Select</button>
+          </div>
+          <h4>Or from the table</h4>
+          <div>
+            <ul>
+              ${Array.from(state.selectedCountries).map(
+                name =>
+                  html`
+                    <li
+                      onclick=${countryAction(state)(name)}
+                      style=${countryHighlight(state)(name)}
+                    >
+                      ${name} (x)
+                    </li>
+                  `
+              )}
+            </ul>
+          </div>
+        </div>
 
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1001">
-          ${Object.keys(countries).map(countrySvg(state))}
-        </svg>
-
-        <table>
+        <table class="table">
           <tr>
             <th onclick=${SortBy("name")}>Country</th>
             <th onclick=${SortBy("weeklyGrowth")}>Weekly Growth Rate</th>
@@ -269,7 +288,10 @@ app({
           </tr>
           ${sorted(state).map(
             ({ name, weeklyGrowth, totalCases, lastWeekCases }) => html`
-              <tr onclick=${countryAction(state)(name)} style=${countryHighlight(state)(name)}>
+              <tr
+                onclick=${countryAction(state)(name)}
+                style=${countryHighlight(state)(name)}
+              >
                 <td>${name}</td>
                 <td>${weeklyGrowth}%</td>
                 <td>${totalCases}</td>
