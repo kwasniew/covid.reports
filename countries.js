@@ -1,4 +1,4 @@
-import without from "./web_modules/lodash.without.js";
+// import without from "./web_modules/lodash.without.js";
 
 const countries = {
   Afghanistan: {
@@ -835,10 +835,10 @@ const countries = {
   }
 };
 
-fetch("https://pomber.github.io/covid19/timeseries.json").then(res => res.json()).then(
-    (data) => {
-      console.log("result", without(Object.keys(countries), ...Object.keys(data)));
-    }
-);
+// fetch("https://pomber.github.io/covid19/timeseries.json").then(res => res.json()).then(
+//     (data) => {
+//       console.log("result", without(Object.keys(countries), ...Object.keys(data)));
+//     }
+// );
 
 export {countries};

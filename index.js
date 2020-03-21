@@ -158,7 +158,7 @@ const SortBy = newSortBy => state => {
   };
 };
 
-const sortCountryNames = report => Object.keys(report).sort();
+const sortedCountryNames = Object.keys(countries).sort();
 
 const selectedOption = (selected, name) =>
   selected === name
@@ -238,7 +238,7 @@ const sortIcon = current => ({sortOrder: [name, asc]}) => {
 };
 
 const tableHeader = (name, text) => state => {
-  return  html`<th onclick=${SortBy(name)}><span>${text} ${sortIcon(name)(state)}</span></th>`;
+  return  html`<th class="c-hand" onclick=${SortBy(name)}><span>${text} ${sortIcon(name)(state)}</span></th>`;
 };
 
 app({
@@ -268,7 +268,7 @@ app({
               oninput=${[SelectCountry, targetValue]}
               class="countries form-select"
             >
-              ${sortCountryNames(state.report).map(name =>
+              ${sortedCountryNames.map(name =>
                 selectedOption(state.currentCountry, name)
               )}
             </select>
