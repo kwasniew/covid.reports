@@ -5,8 +5,12 @@
     "chart.js/dist/Chart.js": "./chart.js/dist/Chart.js",
     "htm": "./htm.js",
     "hyperapp": "./hyperapp.js",
+    "lodash.dropwhile": "./lodash.dropwhile.js",
     "lodash.mapvalues": "./lodash.mapvalues.js",
     "lodash.orderby": "./lodash.orderby.js",
+    "lodash.unionby": "./lodash.unionby.js",
+    "lodash.unzip": "./lodash.unzip.js",
+    "lodash.zip": "./lodash.zip.js",
     "string-to-color": "./string-to-color.js"
   }
 }
