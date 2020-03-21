@@ -5,6 +5,7 @@
     "chart.js/dist/Chart.js": "./chart.js/dist/Chart.js",
     "htm": "./htm.js",
     "hyperapp": "./hyperapp.js",
+    "lodash.mapvalues": "./lodash.mapvalues.js",
     "string-to-color": "./string-to-color.js"
   }
 }

@@ -5,7 +5,7 @@ import { targetValue } from "./web_modules/@hyperapp/events.js";
 import Chart from "./web_modules/chart.js/dist/Chart.js";
 import { stringToRGB, stringToHex } from "./stringToColor.js";
 import { countries } from "./countries.js";
-
+import mapValues from "./web_modules/lodash.mapvalues.js";
 
 const personify = d => d + (d === 1 ? " person" : " people");
 
@@ -30,6 +30,8 @@ const makeChart = data => {
   return chart;
 };
 
+const confirmed = stats => stats.confirmed;
+
 const updateChart = state => [
   () => {
     const data = toChartData(state);
@@ -47,7 +49,7 @@ const toChartData = state => {
       const { r, g, b } = stringToRGB(name);
       return {
         label: name,
-        data: state.report[name].map(stats => stats.confirmed),
+        data: state.report[name].map(confirmed),
         backgroundColor: [`rgba(${r}, ${g}, ${b}, 0.2)`],
         borderColor: [`rgba(${r}, ${g}, ${b}, 1)`]
       };
@@ -57,8 +59,20 @@ const toChartData = state => {
 
 const html = htm.bind(h);
 
+const calculateGrowth = (dataPoints, days) => {
+    const lastDays = dataPoints.slice(-days);
+    const past = lastDays[0] || 1;
+    const present = lastDays[lastDays.length - 1];
+    return 100 * (present - past)/past;
+};
+
+
 const GotReport = (state, report) => {
-    const newState = { ...state, report };
+    const enhancedReport = mapValues(report, stats => Object.assign(stats, {
+        weeklyGrowth: Math.round(calculateGrowth(stats.map(confirmed), 7)),
+        totalCases: confirmed(stats[stats.length - 1])
+    }));
+    const newState = { ...state, report: enhancedReport };
     return [newState, [updateChart(newState)]];
 };
 const fetchReport = request({
@@ -70,7 +84,7 @@ const SelectCountry = (state, currentCountry) => ({
   ...state,
   currentCountry
 });
-const AddCountryFromMap = currentCountry => state => {
+const AddCountry = currentCountry => state => {
     const newState = {
         ...state,
         selectedCountries: unique([
@@ -88,7 +102,7 @@ const RemoveCountryFromMap = currentCountry => state => {
     return [newState, [updateChart(newState)]];
 };
 const unique = list => [...new Set(list)];
-const AddCountry = state => {
+const AddSelectedCountry = state => {
   const newState = {
     ...state,
     selectedCountries: unique([
@@ -106,7 +120,7 @@ const RemoveCountry = country => state => {
   return [newState, [updateChart(newState)]];
 };
 
-const countryNames = report => Object.keys(report).sort();
+const sortCountryNames = report => Object.keys(report).sort();
 
 const selectedOption = (selected, name) =>
   selected === name
@@ -130,7 +144,7 @@ const countrySvg =  state => country => {
     } else {
         return html`
               <path  
-              onclick=${AddCountryFromMap(country)} id="${country}" d="${countries[country].d}" />
+              onclick=${AddCountry(country)} id="${country}" d="${countries[country].d}" />
             `;
     }
 };
@@ -145,11 +159,11 @@ app({
     html`
       <div>
         <select oninput=${[SelectCountry, targetValue]} class="countries">
-          ${countryNames(state.report).map(name =>
+          ${sortCountryNames(state.report).map(name =>
             selectedOption(state.currentCountry, name)
           )}
         </select>
-        <button onclick=${AddCountry}>Select</button>
+        <button onclick=${AddSelectedCountry}>Select</button>
         <ul>
           ${Array.from(state.selectedCountries).map(
             country =>
@@ -164,6 +178,22 @@ app({
             countrySvg(state)
           )}
         </svg>
+        
+        <table>
+        <tr>
+        <th>Country</th>
+        <th>Weekly Growth Rate</th>
+        <th>Total cases</th>
+</tr>
+       ${Object.entries(state.report).map(([name, {weeklyGrowth, totalCases}]) => html`
+            <tr>
+                <td onclick=${AddCountry(name)}>${name}</td>
+                <td>${weeklyGrowth}%</td>
+                <td>${totalCases}</td>
+            
+</tr>
+       `)}
+</table>
       </div>
     `,
   node: document.getElementById("control-panel")
