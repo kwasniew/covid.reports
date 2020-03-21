@@ -8,6 +8,7 @@
     "lodash.dropwhile": "./lodash.dropwhile.js",
     "lodash.mapvalues": "./lodash.mapvalues.js",
     "lodash.orderby": "./lodash.orderby.js",
+    "lodash.pick": "./lodash.pick.js",
     "lodash.unzip": "./lodash.unzip.js",
     "lodash.without": "./lodash.without.js",
     "lodash.zip": "./lodash.zip.js",

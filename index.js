@@ -10,6 +10,7 @@ import orderBy from "./web_modules/lodash.orderby.js";
 import zip from "./web_modules/lodash.zip.js";
 import unzip from "./web_modules/lodash.unzip.js";
 import dropWhile from "./web_modules/lodash.dropwhile.js";
+import pick from "./web_modules/lodash.pick.js";
 
 const personify = d => d + (d === 1 ? " person" : " people");
 
@@ -45,15 +46,19 @@ const updateChart = state => [
 ];
 
 const toChartData = state => {
-  const datasets = state.selectedCountries.map(name => {
-    const { r, g, b } = stringToRGB(name);
-    return state.report[name] ? {
-      label: name,
-      data: state.report[name].map(confirmed),
-      backgroundColor: [`rgba(${r}, ${g}, ${b}, 0.2)`],
-      borderColor: [`rgba(${r}, ${g}, ${b}, 1)`]
-    } : null;
-  }).filter(x => x);
+  const datasets = state.selectedCountries
+    .map(name => {
+      const { r, g, b } = stringToRGB(name);
+      return state.report[name]
+        ? {
+            label: name,
+            data: state.report[name].map(confirmed),
+            backgroundColor: [`rgba(${r}, ${g}, ${b}, 0.2)`],
+            borderColor: [`rgba(${r}, ${g}, ${b}, 1)`]
+          }
+        : null;
+    })
+    .filter(x => x);
 
   const days = dropWhile(zip(...datasets.map(set => set.data)), cases =>
     cases.every(x => x === 0)
@@ -217,7 +222,7 @@ const countrySvg = state => country => {
 
 const sorted = ({ report, sortOrder: [sortBy, asc] }) =>
   orderBy(
-    Object.entries(report).map(
+    Object.entries(pick(report, sortedCountryNames)).map(
       ([name, { weeklyGrowth, totalCases, lastWeekCases }]) => ({
         name,
         weeklyGrowth,
@@ -229,16 +234,25 @@ const sorted = ({ report, sortOrder: [sortBy, asc] }) =>
     [asc]
   );
 
-
-const sortIcon = current => ({sortOrder: [name, asc]}) => {
-  if(current !== name) {
+const sortIcon = current => ({ sortOrder: [name, asc] }) => {
+  if (current !== name) {
     return html``;
   }
-  return asc === "asc" ? html`▲` : html`▼`;
+  return asc === "asc"
+    ? html`
+        ▲
+      `
+    : html`
+        ▼
+      `;
 };
 
 const tableHeader = (name, text) => state => {
-  return  html`<th class="c-hand" onclick=${SortBy(name)}><span>${text} ${sortIcon(name)(state)}</span></th>`;
+  return html`
+    <th class="c-hand" onclick=${SortBy(name)}>
+      <span>${text} ${sortIcon(name)(state)}</span>
+    </th>
+  `;
 };
 
 app({
@@ -255,14 +269,14 @@ app({
     console.log(state) ||
     html`
       <div class="mt-2">
-      <div class="mt-2">
+        <div class="mt-2">
           <h4 class="mt-2">Select country from a map</h4>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1001">
-            ${Object.keys(countries).map(countrySvg(state))}
+            ${sortedCountryNames.map(countrySvg(state))}
           </svg>
         </div>
         <div class="mt-2">
-         <h4>Or from the list</h4>
+          <h4>Or from the list</h4>
           <div class=" form-group input-group">
             <select
               oninput=${[SelectCountry, targetValue]}
@@ -274,7 +288,7 @@ app({
             </select>
             <button class="btn" onclick=${AddSelectedCountry}>Select</button>
           </div>
-          
+
           <div>
             <ul>
               ${Array.from(state.selectedCountries).map(
@@ -301,7 +315,8 @@ app({
           </tr>
           ${sorted(state).map(
             ({ name, weeklyGrowth, totalCases, lastWeekCases }) => html`
-              <tr class="c-hand"
+              <tr
+                class="c-hand"
                 onclick=${countryAction(state)(name)}
                 style=${countryHighlight(state)(name)}
               >
