@@ -60,17 +60,26 @@ const toChartData = state => {
 
 const html = htm.bind(h);
 
+const lastNDays = (dataPoints, days) => dataPoints.slice(-days)
+
 const calculateGrowth = (dataPoints, days) => {
-    const lastDays = dataPoints.slice(-days);
+    const lastDays = lastNDays(dataPoints, days);
     const past = lastDays[0] || 1;
     const present = lastDays[lastDays.length - 1];
     return 100 * (present - past) / past;
 };
 
+const lastWeekCases = (dataPoints) => {
+    const lastDays = lastNDays(dataPoints, 7);
+    const past = lastDays[0];
+    const present = lastDays[lastDays.length - 1];
+    return present - past;
+};
 
 const GotReport = (state, report) => {
     const enhancedReport = mapValues(report, stats => Object.assign(stats, {
         weeklyGrowth: Math.round(calculateGrowth(stats.map(confirmed), 7)),
+        lastWeekCases: lastWeekCases(stats.map(confirmed)),
         totalCases: confirmed(stats[stats.length - 1])
     }));
     const newState = {...state, report: enhancedReport};
@@ -159,9 +168,9 @@ const countrySvg = state => country => {
 
 
 
-const sorted = ({report, sortOrder: [name, asc]}) => orderBy(Object.entries(report)
-        .map(([name, {weeklyGrowth, totalCases}]) => ({name, weeklyGrowth, totalCases}))
-    , [name], [asc]);
+const sorted = ({report, sortOrder: [sortBy, asc]}) => orderBy(Object.entries(report)
+        .map(([name, {weeklyGrowth, totalCases, lastWeekCases}]) => ({name, weeklyGrowth, totalCases, lastWeekCases}))
+    , [sortBy], [asc]);
 
 app({
     init: [
@@ -198,12 +207,14 @@ app({
         <th onclick=${SortBy('name')}>Country</th>
         <th onclick=${SortBy('weeklyGrowth')}>Weekly Growth Rate</th>
         <th onclick=${SortBy('totalCases')}>Total cases</th>
+        <th onclick=${SortBy('lastWeekCases')}>Last week cases</th>
 </tr>
-       ${sorted(state).map(({name, weeklyGrowth, totalCases}) => html`
+       ${sorted(state).map(({name, weeklyGrowth, totalCases, lastWeekCases}) => html`
             <tr>
                 <td onclick=${AddCountry(name)}>${name}</td>
                 <td>${weeklyGrowth}%</td>
                 <td>${totalCases}</td>
+                <td>${lastWeekCases}</td>
             
 </tr>
        `)}
