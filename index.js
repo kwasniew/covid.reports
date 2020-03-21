@@ -30,8 +30,9 @@ const makeChart = data => {
   return chart;
 };
 
-const updateChart = data => [
+const updateChart = state => [
   () => {
+    const data = toChartData(state);
     makeChart(data);
   }
 ];
@@ -56,7 +57,10 @@ const toChartData = state => {
 
 const html = htm.bind(h);
 
-const GotReport = (state, report) => ({ ...state, report });
+const GotReport = (state, report) => {
+    const newState = { ...state, report };
+    return [newState, [updateChart(newState)]];
+};
 const fetchReport = request({
   url: "https://pomber.github.io/covid19/timeseries.json",
   expect: "json",
@@ -74,14 +78,14 @@ const AddCountryFromMap = currentCountry => state => {
             currentCountry
         ])
     };
-    return [newState, [updateChart(toChartData(newState))]];
+    return [newState, [updateChart(newState)]];
 };
 const RemoveCountryFromMap = currentCountry => state => {
     const newState = {
         ...state,
         selectedCountries: state.selectedCountries.filter(country => currentCountry !== country)
     };
-    return [newState, [updateChart(toChartData(newState))]];
+    return [newState, [updateChart(newState)]];
 };
 const unique = list => [...new Set(list)];
 const AddCountry = state => {
@@ -92,14 +96,14 @@ const AddCountry = state => {
       state.currentCountry
     ])
   };
-  return [newState, [updateChart(toChartData(newState))]];
+  return [newState, [updateChart((newState))]];
 };
 const RemoveCountry = country => state => {
   const newState = {
     ...state,
     selectedCountries: state.selectedCountries.filter(c => c !== country)
   };
-  return [newState, [updateChart(toChartData(newState))]];
+  return [newState, [updateChart(newState)]];
 };
 
 const countryNames = report => Object.keys(report).sort();
@@ -133,7 +137,7 @@ const countrySvg =  state => country => {
 
 app({
   init: [
-    { report: {}, currentCountry: "Poland", selectedCountries: [] },
+    { report: {}, currentCountry: "Poland", selectedCountries: ["Poland"] },
     fetchReport
   ],
   view: state =>
