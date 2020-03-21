@@ -8,6 +8,7 @@
     "@hyperapp/events": "0.0.4",
     "@hyperapp/http": "0.0.2",
     "chart.js": "2.9.3",
+    "country-code-lookup": "0.0.16",
     "htm": "3.0.3",
     "hyperapp": "2.0.4"
   },

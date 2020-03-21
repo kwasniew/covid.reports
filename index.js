@@ -115,6 +115,22 @@ const selectedOption = (selected, name) =>
 
 const isActive = state => country => state.selectedCountries.includes(country);
 
+const countrySvg =  state => country => {
+    const isCountryActive = isActive(state)(country);
+
+    if(isCountryActive) {
+        return html`
+              <path stroke="${stringToHex(country)}" fill="${stringToHex(country)}"
+              onclick=${RemoveCountryFromMap(country)} id="${country}" d="${countries[country].d}" />
+            `;
+    } else {
+        return html`
+              <path  
+              onclick=${AddCountryFromMap(country)} id="${country}" d="${countries[country].d}" />
+            `;
+    }
+};
+
 app({
   init: [
     { report: {}, currentCountry: "Poland", selectedCountries: [] },
@@ -141,10 +157,7 @@ app({
 
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1001">
           ${Object.keys(countries).map(
-            country => html`
-              <path stroke="${isActive(state)(countries[country].name) ? stringToHex(countries[country].name) : ""}" 
-              onclick=${isActive(state)(countries[country].name) ? RemoveCountryFromMap(countries[country].name) : AddCountryFromMap(countries[country].name)} id="${country}" d="${countries[country].d}" />
-            `
+            countrySvg(state)
           )}
         </svg>
       </div>
