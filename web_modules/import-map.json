@@ -6,7 +6,7 @@
     "htm": "./htm.js",
     "hyperapp": "./hyperapp.js",
     "lodash.mapvalues": "./lodash.mapvalues.js",
-    "lodash.sortby": "./lodash.sortby.js",
+    "lodash.orderby": "./lodash.orderby.js",
     "string-to-color": "./string-to-color.js"
   }
 }

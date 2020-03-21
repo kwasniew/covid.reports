@@ -6,7 +6,7 @@ import Chart from "./web_modules/chart.js/dist/Chart.js";
 import {stringToRGB, stringToHex} from "./stringToColor.js";
 import {countries} from "./countries.js";
 import mapValues from "./web_modules/lodash.mapvalues.js";
-import sortBy from "./web_modules/lodash.sortby.js";
+import orderBy from "./web_modules/lodash.orderby.js";
 
 const personify = d => d + (d === 1 ? " person" : " people");
 
@@ -121,8 +121,11 @@ const RemoveCountry = country => state => {
     return [newState, [updateChart(newState)]];
 };
 
-const SortBy = sortOrder => state => {
-    return {...state, sortOrder};
+const negateOrder = order => order === "asc" ? "desc" : "asc";
+
+const SortBy = newSortBy => state => {
+    const [oldSortBy, oldDirection] = state.sortOrder;
+    return {...state, sortOrder: [newSortBy, oldSortBy === newSortBy ? negateOrder(oldDirection) : "desc"]};
 };
 
 const sortCountryNames = report => Object.keys(report).sort();
@@ -156,13 +159,13 @@ const countrySvg = state => country => {
 
 
 
-const sorted = ({report, sortOrder}) => sortBy(Object.entries(report)
+const sorted = ({report, sortOrder: [name, asc]}) => orderBy(Object.entries(report)
         .map(([name, {weeklyGrowth, totalCases}]) => ({name, weeklyGrowth, totalCases}))
-    , sortOrder);
+    , [name], [asc]);
 
 app({
     init: [
-        {report: {}, currentCountry: "Poland", selectedCountries: ["Poland"], sortOrder: "name"},
+        {report: {}, currentCountry: "Poland", selectedCountries: ["Poland"], sortOrder: ["name", "asc"]},
         fetchReport
     ],
     view: state =>
