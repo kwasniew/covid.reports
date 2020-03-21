@@ -142,15 +142,6 @@ const RemoveCountry = country => state => {
   };
   return [newState, [updateChart(newState)]];
 };
-const RemoveCountryFromMap = currentCountry => state => {
-    const newState = {
-        ...state,
-        selectedCountries: state.selectedCountries.filter(
-            country => currentCountry !== country
-        )
-    };
-    return [newState, [updateChart(newState)]];
-};
 
 const negateOrder = order => (order === "asc" ? "desc" : "asc");
 
@@ -206,7 +197,7 @@ const countrySvg = state => country => {
       <path
         stroke="${stringToHex(country)}"
         fill="${stringToHex(country)}"
-        onclick=${RemoveCountryFromMap(country)}
+        onclick=${RemoveCountry(country)}
         id="${country}"
         d="${countries[country].d}"
       />
@@ -258,9 +249,9 @@ app({
         <button onclick=${AddSelectedCountry}>Select</button>
         <ul>
           ${Array.from(state.selectedCountries).map(
-            country =>
+            name =>
               html`
-                <li onclick=${RemoveCountry(country)}>${country} (x)</li>
+                <li onclick=${countryAction(state)(name)} style=${countryHighlight(state)(name)}>${name} (x)</li>
               `
           )}
         </ul>
