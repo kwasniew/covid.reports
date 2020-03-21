@@ -259,9 +259,9 @@ app({
   init: [
     {
       report: {},
-      currentCountry: "Poland",
-      selectedCountries: ["Poland"],
-      sortOrder: ["name", "asc"]
+      currentCountry: "Italy",
+      selectedCountries: ["Italy"],
+      sortOrder: ["lastWeekCases", "desc"]
     },
     fetchReport
   ],
