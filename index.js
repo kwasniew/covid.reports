@@ -187,16 +187,9 @@ const tableHeader = (name, text) => state => {
   `;
 };
 
-const selectedCountries = state => html`
-  <ul>
-    ${Array.from(state.selectedCountries).map(
-      name =>
-        html`
-          <li
-            class="chip"
-            onclick=${countryAction(state)(name)}
-            style=${countryHighlight(state)(name)}
-          >
+const chip = name => state => html`
+    <span class="chip" onclick=${countryAction(state)(name)}
+            style=${countryHighlight(state)(name)}>
             ${name}
             <span
               class="btn btn-clear"
@@ -204,10 +197,19 @@ const selectedCountries = state => html`
               aria-label="Close"
               role="button"
             ></span>
-          </li>
-        `
+            
+</span>
+`;
+
+const chipOrName = name => state => isActive(state)(name) ? chip(name)(state) : name;
+
+const selectedCountries = state => html`
+  <div class="m-2">
+    ${Array.from(state.selectedCountries).map(
+      name =>
+        chip(name)(state)
     )}
-  </ul>
+  </div>
 `;
 
 app({
@@ -296,7 +298,7 @@ app({
                   onclick=${countryAction(state)(name)}
                   style=${countryHighlight(state)(name)}
                 >
-                  <td>${name}</td>
+                  <td>${chipOrName(name)(state)}</td>
                   <td>${weeklyGrowth}%</td>
                   <td>${totalCases}</td>
                   <td>${lastWeekCases}</td>
