@@ -31,7 +31,9 @@ const makeChart = data => {
       labels: data.labels,
       datasets: data.datasets
     },
-    options: {}
+    options: {
+        legend: false
+    }
   });
   return chart;
 };
