@@ -1,7 +1,7 @@
 import test from "tape";
 import { toChartData } from "../chart.js";
 
-test("prepare chart data from state", t => {
+test("trim initial cases with zero", t => {
   const state = {
     selectedCountries: ["Country A", "Country B"],
     reportType: "confirmed",
@@ -85,7 +85,7 @@ test("no reported cases", t => {
   t.end();
 });
 
-test("no selected countries", t => {
+test("no countries selected", t => {
   const state = {
     selectedCountries: [],
     reportType: "confirmed",
@@ -104,8 +104,7 @@ test("no selected countries", t => {
   t.end();
 });
 
-
-test("prepare chart data from given date", t => {
+test("from given date", t => {
   const state = {
     dateFrom: "2020-1-23",
     selectedCountries: ["Country A", "Country B"],

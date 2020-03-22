@@ -26,15 +26,16 @@ const fetchReport = request({
 });
 
 const SetDateFrom = (state, dateFrom) => {
-    const newState = {...state, dateFrom};
-    return [newState, [updateChart(newState)]];
+  const newState = { ...state, dateFrom };
+  return [newState, [updateChart(newState)]];
 };
 
 const RemoveDateFrom = state => {
-    const newState = {...state, dateFrom: ""};
-    return [newState, [updateChart(newState)]];
+  const newState = { ...state, dateFrom: "" };
+  return [newState, [updateChart(newState)]];
 };
 
+const unique = list => [...new Set(list)];
 const AddCountry = currentCountry => state => {
   const newState = {
     ...state,
@@ -61,7 +62,6 @@ const ChangeReportType = reportType => state => {
   return [newState, [updateChart(newState)]];
 };
 
-const unique = list => [...new Set(list)];
 const AddSelectedCountry = (state, currentCountry) =>
   AddCountry(currentCountry)(state);
 const RemoveCountry = country => state => {
@@ -185,20 +185,20 @@ const tableHeader = (name, text) => state => {
   `;
 };
 
-const dateChip = dateFrom => dateFrom ? html`
-  <span
-    class="chip"
-    onclick=${RemoveDateFrom}
-  >
-    From: ${dateFrom}
-    <span
-      class="btn btn-clear"
-      href="#"
-      aria-label="Remove Date"
-      role="button"
-    ></span>
-  </span>
-` : "";
+const dateChip = dateFrom =>
+  dateFrom
+    ? html`
+        <span class="chip" onclick=${RemoveDateFrom}>
+          From: ${dateFrom}
+          <span
+            class="btn btn-clear"
+            href="#"
+            aria-label="Remove Date"
+            role="button"
+          ></span>
+        </span>
+      `
+    : "";
 
 const countryChip = name => state => html`
   <span
