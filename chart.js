@@ -32,7 +32,7 @@ const makeChart = data => {
   });
 };
 
-const toChartData = state => {
+export const toChartData = state => {
   const datasets = state.selectedCountries
     .map(name => {
       const { r, g, b } = stringToRGB(name);
