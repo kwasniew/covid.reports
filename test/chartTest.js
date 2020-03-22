@@ -103,3 +103,47 @@ test("no selected countries", t => {
 
   t.end();
 });
+
+
+test("prepare chart data from given date", t => {
+  const state = {
+    dateFrom: "2020-1-23",
+    selectedCountries: ["Country A", "Country B"],
+    reportType: "confirmed",
+    report: {
+      "Country A": [
+        { date: "2020-1-22", confirmed: 1 },
+        { date: "2020-1-23", confirmed: 2 },
+        { date: "2020-1-24", confirmed: 3 }
+      ],
+      "Country B": [
+        { date: "2020-1-22", confirmed: 3 },
+        { date: "2020-1-23", confirmed: 4 },
+        { date: "2020-1-24", confirmed: 5 }
+      ]
+    }
+  };
+  const chartData = {
+    labels: ["2020-1-23", "2020-1-24"],
+    datasets: [
+      {
+        label: "Country A",
+        data: [2, 3],
+        backgroundColor: "rgba(28, 68, 87, 0.2)",
+        pointBackgroundColor: "rgba(28, 68, 87, 1)",
+        borderColor: "rgba(28, 68, 87, 1)"
+      },
+      {
+        label: "Country B",
+        data: [4, 5],
+        backgroundColor: "rgba(160, 231, 59, 0.2)",
+        pointBackgroundColor: "rgba(160, 231, 59, 1)",
+        borderColor: "rgba(160, 231, 59, 1)"
+      }
+    ]
+  };
+
+  t.deepEqual(toChartData(state), chartData);
+
+  t.end();
+});

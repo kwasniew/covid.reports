@@ -82,11 +82,26 @@ const trimLeadingData = datasets => {
     return {cleanDatasets, length};
 };
 
-const trimLeadingLabels = ({report, datasets, length}) => {
+const listLabels = ({report, datasets}) => {
     const [first] = datasets;
     return first && first.data.length > 0
-        ? report[first.label].map(stats => stats.date).slice(-length)
-        : [];
+        ? report[first.label].map(stats => stats.date) : [];
+};
+
+const trimLeadingLabels = ({report, datasets, length}) => listLabels({report, datasets}).slice(-length);
+
+const dateBasedStrategy = ({report, datasets, dateFrom}) => {
+    const trimmedLabels = dropWhile(listLabels({report, datasets}), label => label !== dateFrom);
+    const trimmedLabelsLength = trimmedLabels.length;
+    const cleanDatasets = datasets.map(dataset => ({...dataset, data: dataset.data.slice(-trimmedLabelsLength)}));
+    return {labels: trimmedLabels, datasets: cleanDatasets};
+};
+
+const fromPatientZeroStrategy = ({report, datasets}) => {
+    const {cleanDatasets, length} = trimLeadingData(datasets);
+    const labels = trimLeadingLabels({report, datasets: cleanDatasets, length});
+
+    return {labels, datasets: cleanDatasets};
 };
 
 export const toChartData = ({selectedCountries, reportType, report, dateFrom}) => {
@@ -94,10 +109,12 @@ export const toChartData = ({selectedCountries, reportType, report, dateFrom}) =
         .map(toChartDataItem({report, reportType}))
         .filter(x => x);
 
-    const {cleanDatasets, length} = trimLeadingData(datasets);
+    if(dateFrom) {
+        return dateBasedStrategy({report, datasets, dateFrom});
+    } else {
+        return fromPatientZeroStrategy({report, datasets});
+    }
 
-    const labels = trimLeadingLabels({report, datasets: cleanDatasets, length});
-    return {labels, datasets: cleanDatasets};
 };
 
 export const updateChart = state => [

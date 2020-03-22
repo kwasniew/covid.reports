@@ -15,6 +15,7 @@
     "hyperapp": "2.0.4",
     "lodash.dropwhile": "4.6.0",
     "lodash.mapvalues": "4.6.0",
+    "lodash.matches": "4.6.0",
     "lodash.orderby": "4.6.0",
     "lodash.pick": "4.4.0",
     "lodash.property": "4.4.2",
