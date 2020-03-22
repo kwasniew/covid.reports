@@ -3,8 +3,7 @@ import { stringToRGB } from "./stringToColor.js";
 import dropWhile from "./web_modules/lodash.dropwhile.js";
 import zip from "./web_modules/lodash.zip.js";
 import unzip from "./web_modules/lodash.unzip.js";
-
-const confirmed = stats => stats.confirmed;
+import prop from "./web_modules/lodash.property.js";
 
 let chart = null;
 const makeChart = data => {
@@ -39,7 +38,7 @@ const toChartData = state => {
       return state.report[name]
         ? {
             label: name,
-            data: state.report[name].map(confirmed),
+            data: state.report[name].map(prop(state.reportType)),
             backgroundColor: `rgba(${r}, ${g}, ${b}, 0.2)`,
             pointBackgroundColor: `rgba(${r}, ${g}, ${b}, 1)`,
             borderColor: `rgba(${r}, ${g}, ${b}, 1)`

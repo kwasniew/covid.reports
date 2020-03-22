@@ -1,25 +1,28 @@
 import { h, app } from "./web_modules/hyperapp.js";
 import { request } from "./web_modules/@hyperapp/http.js";
 import htm from "./web_modules/htm.js";
-import { targetValue } from "./web_modules/@hyperapp/events.js";
+import { targetValue, preventDefault } from "./web_modules/@hyperapp/events.js";
 import { stringToHex } from "./stringToColor.js";
 import { countries } from "./countries.js";
 import mapValues from "./web_modules/lodash.mapvalues.js";
 import orderBy from "./web_modules/lodash.orderby.js";
+import prop from "./web_modules/lodash.property.js";
 import pick from "./web_modules/lodash.pick.js";
 import { updateChart } from "./chart.js";
 import { calculateGrowth, calculateCasesInLastDays } from "./stats.js";
-
-const confirmed = stats => stats.confirmed;
+import cc from "./web_modules/classcat.js";
 
 const html = htm.bind(h);
 
 const GotReport = (state, report) => {
   const enhancedReport = mapValues(report, stats =>
     Object.assign(stats, {
-      weeklyGrowth: calculateGrowth(stats.map(confirmed), 7),
-      lastWeekCases: calculateCasesInLastDays(stats.map(confirmed), 7),
-      totalCases: confirmed(stats[stats.length - 1])
+      weeklyGrowth: calculateGrowth(stats.map(prop(state.reportType)), 7),
+      lastWeekCases: calculateCasesInLastDays(
+        stats.map(prop(state.reportType)),
+        7
+      ),
+      totalCases: prop(state.reportType)(stats[stats.length - 1])
     })
   );
   const newState = { ...state, report: enhancedReport };
@@ -45,6 +48,10 @@ const SelectCountry = currentCountry => state => {
     currentCountry
   };
   return newState;
+};
+const ChangeReportType = reportType => state => {
+  const newState = { ...state, reportType };
+  return [newState, [updateChart(newState)]];
 };
 
 const unique = list => [...new Set(list)];
@@ -236,7 +243,7 @@ const header = html`
             </div>
             <div class="column column-center">
               <kbd class="text-large"
-                >Reported Coronavirus cases trends by country</kbd
+                >Coronavirus cases trends by country</kbd
               >
             </div>
           </div>
@@ -306,15 +313,33 @@ const main = state => html`
    </Container>
 `;
 
+const tab = ({ reportType }) => html`
+ <${Container}>
+    <ul class="tab tab-block">
+      <li class=${cc({ "tab-item": true, active: reportType === "confirmed" })}>
+        <a href="#" onclick=${preventDefault(
+          ChangeReportType("confirmed")
+        )}>Confirmed</a>
+      </li>
+      <li class=${cc({ "tab-item": true, active: reportType === "deaths" })}>
+        <a href="#" onclick=${preventDefault(
+          ChangeReportType("deaths")
+        )}>Deaths</a>
+      </li>
+    </ul>
+ </Container>
+`;
+
 const view = state =>
   html`
     <div>
-      ${header} ${main(state)} ${table(state)}
+      ${header} ${tab(state)} ${main(state)} ${table(state)}
     </div>
   `;
 
 const initialState = {
   report: {},
+  reportType: "confirmed",
   currentCountry: "Italy",
   selectedCountries: ["China", "Italy"],
   sortOrder: ["lastWeekCases", "desc"]
