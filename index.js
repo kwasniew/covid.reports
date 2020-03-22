@@ -32,7 +32,7 @@ const makeChart = data => {
       datasets: data.datasets
     },
     options: {
-        legend: false
+      legend: false
     }
   });
   return chart;
@@ -120,10 +120,7 @@ const fetchReport = request({
   expect: "json",
   action: GotReport
 });
-const SelectCountry = (state, currentCountry) => ({
-  ...state,
-  currentCountry
-});
+
 const AddCountry = currentCountry => state => {
   const newState = {
     ...state,
@@ -134,16 +131,8 @@ const AddCountry = currentCountry => state => {
 };
 
 const unique = list => [...new Set(list)];
-const AddSelectedCountry = state => {
-  const newState = {
-    ...state,
-    selectedCountries: unique([
-      ...state.selectedCountries,
-      state.currentCountry
-    ])
-  };
-  return [newState, [updateChart(newState)]];
-};
+const AddSelectedCountry = (state, currentCountry) =>
+  AddCountry(currentCountry)(state);
 const RemoveCountry = country => state => {
   const newState = {
     ...state,
@@ -160,7 +149,11 @@ const SortBy = newSortBy => state => {
     ...state,
     sortOrder: [
       newSortBy,
-      oldSortBy === newSortBy ? negateOrder(oldDirection) : "desc"
+      oldSortBy === newSortBy
+        ? negateOrder(oldDirection)
+        : newSortBy === "name"
+        ? "asc"
+        : "desc"
     ]
   };
 };
@@ -269,8 +262,13 @@ const selectedCountries = state => html`
             onclick=${countryAction(state)(name)}
             style=${countryHighlight(state)(name)}
           >
-            ${name} 
-            <a class="btn btn-clear" href="#" aria-label="Close" role="button"></a>
+            ${name}
+            <span
+              class="btn btn-clear"
+              href="#"
+              aria-label="Close"
+              role="button"
+            ></span>
           </li>
         `
     )}
@@ -294,17 +292,16 @@ app({
         <h4>Confirmed coronavirus cases trends:</h4>
         ${selectedCountries(state)}
         <canvas id="chart"></canvas>
-         <div class="mt-2">
+        <div class="mt-2">
           <div class=" form-group input-group">
             <select
-              oninput=${[SelectCountry, targetValue]}
+              oninput=${[AddSelectedCountry, targetValue]}
               class="countries form-select"
             >
               ${sortedCountryNames.map(name =>
-        selectedOption(state.currentCountry, name)
-    )}
+                selectedOption(state.currentCountry, name)
+              )}
             </select>
-            <button class="btn" onclick=${AddSelectedCountry}>Select</button>
           </div>
         </div>
         <div class="mt-2">
