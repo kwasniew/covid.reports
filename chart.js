@@ -14,21 +14,22 @@ const makeChart = data => {
     return;
   }
 
-  chart = new Chart("chart", {
-    type: "line",
-    data: {
-      labels: data.labels,
-      datasets: data.datasets
-    },
-    options: {
-      legend: false,
-      tooltips: {
-        mode: "point",
-        displayColors: true
+  requestAnimationFrame(() => {
+    chart = new Chart("chart", {
+      type: "line",
+      data: {
+        labels: data.labels,
+        datasets: data.datasets
+      },
+      options: {
+        legend: false,
+        tooltips: {
+          mode: "point",
+          displayColors: true
+        }
       }
-    }
+    });
   });
-  return chart;
 };
 
 const toChartData = state => {
