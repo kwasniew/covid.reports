@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "parcel build index.html",
-    "snowpack": "snowpack",
+    "snowpack": "snowpack --include '*.js'",
     "format": "prettier --write *.js",
     "postinstall": "npm run snowpack"
   },
@@ -25,23 +25,5 @@
     "parcel": "1.12.4",
     "prettier": "1.19.1",
     "snowpack": "1.6.0"
-  },
-  "snowpack": {
-    "webDependencies": [
-      "@hyperapp/events",
-      "@hyperapp/http",
-      "htm",
-      "hyperapp",
-      "string-to-color",
-      "lodash.mapvalues",
-      "lodash.orderby",
-      "lodash.dropwhile",
-      "lodash.pick",
-      "lodash.zip",
-      "lodash.unzip",
-      "lodash.without",
-      "chart.js/dist/Chart.js",
-      "chart.js/dist/Chart.js"
-    ]
   }
 }

@@ -11,7 +11,6 @@ import {updateChart} from "./chart.js";
 
 const confirmed = stats => stats.confirmed;
 
-
 const html = htm.bind(h);
 
 const lastNDays = (dataPoints, days) => dataPoints.slice(-days);
