@@ -7,7 +7,7 @@ import { countries } from "./countries.js";
 import mapValues from "./web_modules/lodash.mapvalues.js";
 import orderBy from "./web_modules/lodash.orderby.js";
 import pick from "./web_modules/lodash.pick.js";
-import {updateChart} from "./chart.js";
+import { updateChart } from "./chart.js";
 
 const confirmed = stats => stats.confirmed;
 
@@ -55,11 +55,11 @@ const AddCountry = currentCountry => state => {
   return [newState, [updateChart(newState)]];
 };
 const SelectCountry = currentCountry => state => {
-    const newState = {
-        ...state,
-        currentCountry
-    };
-    return newState;
+  const newState = {
+    ...state,
+    currentCountry
+  };
+  return newState;
 };
 
 const unique = list => [...new Set(list)];
@@ -187,27 +187,129 @@ const tableHeader = (name, text) => state => {
 };
 
 const chip = name => state => html`
-    <span class="chip" onclick=${countryAction(state)(name)}
-            style=${countryHighlight(state)(name)}>
-            ${name}
-            <span
-              class="btn btn-clear"
-              href="#"
-              aria-label="Close"
-              role="button"
-            ></span>
-            
-</span>
+  <span
+    class="chip"
+    onclick=${countryAction(state)(name)}
+    style=${countryHighlight(state)(name)}
+  >
+    ${name}
+    <span
+      class="btn btn-clear"
+      href="#"
+      aria-label="Close"
+      role="button"
+    ></span>
+  </span>
 `;
 
-const chipOrName = name => state => isActive(state)(name) ? chip(name)(state) : name;
+const chipOrName = name => state =>
+  isActive(state)(name) ? chip(name)(state) : name;
 
 const selectedCountries = state => html`
   <div class="m-2">
-    ${Array.from(state.selectedCountries).map(
-      name =>
-        chip(name)(state)
-    )}
+    ${Array.from(state.selectedCountries).map(name => chip(name)(state))}
+  </div>
+`;
+
+const header = html`
+  <div class="bg-primary">
+    <header class="container grid-md">
+      <div class="navbar">
+        <section class="navbar-section">
+          <span class="navbar-brand text-bold text-light mt-2"
+            >Covid Reports</span
+          >
+        </section>
+        <section class="navbar-section">
+          <a
+            href="https://github.com/kwasniew/corona"
+            class="btn btn-link text-light"
+            >GitHub</a
+          >
+        </section>
+      </div>
+      <div class="hero hero-sm">
+        <div class="hero-body columns">
+          <div class="column col-auto">
+            <figure
+              class="avatar avatar-xl badge"
+              data-badge="19"
+              data-initial="YZ"
+            >
+              <img
+                src="https://picturepan2.github.io/spectre/img/avatar-1.png"
+              />
+            </figure>
+          </div>
+          <div class="column column-center">
+            <kbd class="text-large"
+              >Reported Coronavirus cases trends by country</kbd
+            >
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
+`;
+
+const table = state => html`
+  <div class="bg-gray">
+    <table class="table container grid-md">
+      <tr>
+        ${tableHeader("name", "Country")(state)}
+        ${tableHeader("weeklyGrowth", "Weekly Growth Rate")(state)}
+        ${tableHeader("totalCases", "Total cases")(state)}
+        ${tableHeader("lastWeekCases", "Last week cases")(state)}
+      </tr>
+      ${sorted(state).map(
+        ({ name, weeklyGrowth, totalCases, lastWeekCases }) => html`
+          <tr
+            class="c-hand"
+            onclick=${countryAction(state)(name)}
+            style=${countryHighlight(state)(name)}
+          >
+            <td>${chipOrName(name)(state)}</td>
+            <td>${weeklyGrowth}%</td>
+            <td>${totalCases}</td>
+            <td>${lastWeekCases}</td>
+          </tr>
+        `
+      )}
+    </table>
+  </div>
+`;
+
+const map = state => html`
+  <div class="mt-2">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1001">
+      ${sortedCountryNames.map(countrySvg(state))}
+    </svg>
+  </div>
+`;
+
+const select = state => html`
+  <div class="mt-2">
+    <div class=" form-group input-group">
+      <select
+        oninput=${[AddSelectedCountry, targetValue]}
+        class="countries form-select"
+      >
+        ${sortedCountryNames.map(name =>
+          selectedOption(state.currentCountry, name)
+        )}
+      </select>
+    </div>
+  </div>
+`;
+
+const chart = html`
+  <canvas id="chart"></canvas>
+`;
+
+const main = state => html`
+  <div class="container grid-md">
+    ${selectedCountries(state)} ${chart} ${select(state)} ${map(state)}
+    ${selectedCountries(state)}
   </div>
 `;
 
@@ -224,88 +326,7 @@ app({
   view: state =>
     html`
       <div>
-        <div class="bg-primary">
-          <header class="container grid-md">
-            <div class="navbar">
-              <section class="navbar-section">
-                <span class="navbar-brand text-bold text-light mt-2"
-                  >Covid Reports</span
-                >
-              </section>
-              <section class="navbar-section">
-                <a
-                  href="https://github.com/kwasniew/corona"
-                  class="btn btn-link text-light"
-                  >GitHub</a
-                >
-              </section>
-            </div>
-            <div class="hero hero-sm">
-              <div class="hero-body columns">
-                <div class="column col-auto">
-                  <figure
-                    class="avatar avatar-xl badge"
-                    data-badge="19"
-                    data-initial="YZ"
-                  >
-                    <img
-                      src="https://picturepan2.github.io/spectre/img/avatar-1.png"
-                    />
-                  </figure>
-                </div>
-                <div class="column column-center">
-                  <kbd class="text-large">Reported Coronavirus cases trends by country</kbd>
-                </div>
-              </div>
-            </div>
-          </header>
-        </div>
-        <div class="container grid-md">
-          ${selectedCountries(state)}
-          <canvas id="chart"></canvas>
-          <div class="mt-2">
-            <div class=" form-group input-group">
-              <select
-                oninput=${[AddSelectedCountry, targetValue]}
-                class="countries form-select"
-              >
-                ${sortedCountryNames.map(name =>
-                  selectedOption(state.currentCountry, name)
-                )}
-              </select>
-            </div>
-          </div>
-          <div class="mt-2">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1001">
-              ${sortedCountryNames.map(countrySvg(state))}
-            </svg>
-          </div>
-          ${selectedCountries(state)}
-        </div>
-        <div class="bg-gray">
-          <table class="table container grid-md">
-            <tr>
-              ${tableHeader("name", "Country")(state)}
-              ${tableHeader("weeklyGrowth", "Weekly Growth Rate")(state)}
-              ${tableHeader("totalCases", "Total cases")(state)}
-              ${tableHeader("lastWeekCases", "Last week cases")(state)}
-            </tr>
-            ${sorted(state).map(
-              ({ name, weeklyGrowth, totalCases, lastWeekCases }) => html`
-                <tr
-                  class="c-hand"
-                  onclick=${countryAction(state)(name)}
-                  style=${countryHighlight(state)(name)}
-                >
-                  <td>${chipOrName(name)(state)}</td>
-                  <td>${weeklyGrowth}%</td>
-                  <td>${totalCases}</td>
-                  <td>${lastWeekCases}</td>
-                </tr>
-              `
-            )}
-          </table>
-        </div>
+        ${header} ${main(state)} ${table(state)}
       </div>
     `,
   node: document.getElementById("control-panel")
