@@ -42,7 +42,7 @@ const SelectCountry = currentCountry => state => {
 };
 const ChangeReportType = reportType => state => {
   const report = addCustomStatsToReport({report: state.report, reportType});
-  const newState = { ...state, reportType, report };
+  const newState = { ...state, reportType, report, sortOrder: ["lastWeekCases", "desc"] };
   return [newState, [updateChart(newState)]];
 };
 
