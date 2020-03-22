@@ -1,7 +1,7 @@
-import { h, app } from "./web_modules/hyperapp.js";
+import { app, h } from "./web_modules/hyperapp.js";
 import { request } from "./web_modules/@hyperapp/http.js";
 import htm from "./web_modules/htm.js";
-import { targetValue, preventDefault } from "./web_modules/@hyperapp/events.js";
+import { preventDefault, targetValue } from "./web_modules/@hyperapp/events.js";
 import { stringToHex } from "./stringToColor.js";
 import { countries } from "./countries.js";
 import mapValues from "./web_modules/lodash.mapvalues.js";
@@ -9,23 +9,31 @@ import orderBy from "./web_modules/lodash.orderby.js";
 import prop from "./web_modules/lodash.property.js";
 import pick from "./web_modules/lodash.pick.js";
 import { updateChart } from "./chart.js";
-import { calculateGrowth, calculateCasesInLastDays } from "./stats.js";
+import { calculateCasesInLastDays, calculateGrowth } from "./stats.js";
 import cc from "./web_modules/classcat.js";
 
 const html = htm.bind(h);
 
-const GotReport = (state, report) => {
-  const enhancedReport = mapValues(report, stats =>
-    Object.assign(stats, {
-      weeklyGrowth: calculateGrowth(stats.map(prop(state.reportType)), 7),
-      lastWeekCases: calculateCasesInLastDays(
-        stats.map(prop(state.reportType)),
-        7
-      ),
-      totalCases: prop(state.reportType)(stats[stats.length - 1])
-    })
+const calculateExtraStats = (stats, reportType) => {
+  const extractReportType = prop(reportType);
+  return {
+    weeklyGrowth: calculateGrowth(stats.map(extractReportType), 7),
+    lastWeekCases: calculateCasesInLastDays(stats.map(extractReportType), 7),
+    totalCases: extractReportType(stats[stats.length - 1])
+  };
+};
+
+const enhanceReport = (report, reportType) => {
+  return mapValues(report, stats =>
+    Object.assign(stats, calculateExtraStats(stats, reportType))
   );
-  const newState = { ...state, report: enhancedReport };
+};
+
+const GotReport = (state, report) => {
+  const newState = {
+    ...state,
+    report: enhanceReport(report, state.reportType)
+  };
   return [newState, [updateChart(newState)]];
 };
 const fetchReport = request({
@@ -50,7 +58,8 @@ const SelectCountry = currentCountry => state => {
   return newState;
 };
 const ChangeReportType = reportType => state => {
-  const newState = { ...state, reportType };
+    const report = enhanceReport(state.report, reportType);
+  const newState = { ...state, reportType, report };
   return [newState, [updateChart(newState)]];
 };
 
@@ -303,13 +312,20 @@ const select = state => html`
 `;
 
 const chart = html`
-<div>
-<figure class="figure">
-<canvas id="chart"></canvas>
-<figcaption class="figure-caption text-right text-normal"><sup>*Data comes from <a href="https://github.com/pomber/covid19">https://github.com/pomber/covid19</a> and is updated three times a day.</sup></figcaption>
-</figure>
-</div>
-  
+  <div>
+    <figure class="figure">
+      <canvas id="chart"></canvas>
+      <figcaption class="figure-caption text-right text-normal">
+        <sup
+          >*Data comes from
+          <a href="https://github.com/pomber/covid19"
+            >https://github.com/pomber/covid19</a
+          >
+          and is updated three times a day.</sup
+        >
+      </figcaption>
+    </figure>
+  </div>
 `;
 
 const main = state => html`
