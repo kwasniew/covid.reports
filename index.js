@@ -303,7 +303,13 @@ const select = state => html`
 `;
 
 const chart = html`
-  <canvas id="chart"></canvas>
+<div>
+<figure class="figure">
+<canvas id="chart"></canvas>
+<figcaption class="figure-caption text-right text-normal"><sup>*Data comes from <a href="https://github.com/pomber/covid19">https://github.com/pomber/covid19</a> and is updated three times a day.</sup></figcaption>
+</figure>
+</div>
+  
 `;
 
 const main = state => html`
