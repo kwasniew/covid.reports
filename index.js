@@ -190,7 +190,7 @@ const dateChip = dateFrom => dateFrom ? html`
     class="chip"
     onclick=${RemoveDateFrom}
   >
-    ${dateFrom}
+    From: ${dateFrom}
     <span
       class="btn btn-clear"
       href="#"
