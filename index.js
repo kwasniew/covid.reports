@@ -313,6 +313,13 @@ const main = state => html`
   </div>
 `;
 
+const view = state =>
+    html`
+      <div>
+        ${header} ${main(state)} ${table(state)}
+      </div>
+    `;
+
 app({
   init: [
     {
@@ -323,11 +330,6 @@ app({
     },
     fetchReport
   ],
-  view: state =>
-    html`
-      <div>
-        ${header} ${main(state)} ${table(state)}
-      </div>
-    `,
-  node: document.getElementById("control-panel")
+  view,
+  node: document.getElementById("app")
 });
