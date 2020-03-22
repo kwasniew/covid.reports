@@ -214,7 +214,7 @@ const header = html`
           </section>
           <section class="navbar-section">
             <a
-              href="https://github.com/kwasniew/corona"
+              href="https://github.com/kwasniew/coronareports"
               class="btn btn-link text-light"
               >GitHub</a
             >
