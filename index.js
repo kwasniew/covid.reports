@@ -213,6 +213,8 @@ const countrySvg = state => country => {
     return html`
       <path
         onclick=${AddCountry(country)}
+        fill="#dddddd"
+        stroke="#111111"
         id="${country}"
         d="${countries[country].d}"
       />
@@ -255,6 +257,24 @@ const tableHeader = (name, text) => state => {
   `;
 };
 
+const selectedCountries = state => html`
+  <ul>
+    ${Array.from(state.selectedCountries).map(
+      name =>
+        html`
+          <li
+            class="chip"
+            onclick=${countryAction(state)(name)}
+            style=${countryHighlight(state)(name)}
+          >
+            ${name} 
+            <a class="btn btn-clear" href="#" aria-label="Close" role="button"></a>
+          </li>
+        `
+    )}
+  </ul>
+`;
+
 app({
   init: [
     {
@@ -269,43 +289,29 @@ app({
     console.log(state) ||
     html`
       <div class="mt-2">
-        <div class="mt-2">
-          <h4 class="mt-2">Select country from a map</h4>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1001">
-            ${sortedCountryNames.map(countrySvg(state))}
-          </svg>
-        </div>
-        <div class="mt-2">
-          <h4>Or from the list</h4>
+        <h4>Confirmed coronavirus cases trends:</h4>
+        ${selectedCountries(state)}
+        <canvas id="chart"></canvas>
+         <div class="mt-2">
           <div class=" form-group input-group">
             <select
               oninput=${[SelectCountry, targetValue]}
               class="countries form-select"
             >
               ${sortedCountryNames.map(name =>
-                selectedOption(state.currentCountry, name)
-              )}
+        selectedOption(state.currentCountry, name)
+    )}
             </select>
             <button class="btn" onclick=${AddSelectedCountry}>Select</button>
           </div>
-
-          <div>
-            <ul>
-              ${Array.from(state.selectedCountries).map(
-                name =>
-                  html`
-                    <li
-                      onclick=${countryAction(state)(name)}
-                      style=${countryHighlight(state)(name)}
-                    >
-                      ${name} (x)
-                    </li>
-                  `
-              )}
-            </ul>
-          </div>
         </div>
-        <h4>Or from the table</h4>
+        <div class="mt-2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1001">
+            ${sortedCountryNames.map(countrySvg(state))}
+          </svg>
+        </div>
+        ${selectedCountries(state)}
+
         <table class="table">
           <tr>
             ${tableHeader("name", "Country")(state)}
