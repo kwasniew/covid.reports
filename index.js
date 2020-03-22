@@ -240,7 +240,7 @@ const header = html`
             </div>
             <div class="column column-center">
               <kbd class="text-large"
-                >Coronavirus cases trends by country</kbd
+                >Coronavirus trends comparison by country</kbd
               >
             </div>
           </div>
