@@ -280,7 +280,7 @@ app({
     {
       report: {},
       currentCountry: "Italy",
-      selectedCountries: ["Italy"],
+      selectedCountries: ["China", "Italy"],
       sortOrder: ["lastWeekCases", "desc"]
     },
     fetchReport
@@ -288,51 +288,89 @@ app({
   view: state =>
     console.log(state) ||
     html`
-      <div class="mt-2">
-        <h4>Confirmed coronavirus cases trends:</h4>
-        ${selectedCountries(state)}
-        <canvas id="chart"></canvas>
-        <div class="mt-2">
-          <div class=" form-group input-group">
-            <select
-              oninput=${[AddSelectedCountry, targetValue]}
-              class="countries form-select"
-            >
-              ${sortedCountryNames.map(name =>
-                selectedOption(state.currentCountry, name)
-              )}
-            </select>
-          </div>
+      <div>
+        <div class="bg-primary">
+          <header class="container grid-md">
+            <div class="navbar">
+              <section class="navbar-section">
+                <span class="navbar-brand text-bold text-light mt-2"
+                  >Covid Reports</span
+                >
+              </section>
+              <section class="navbar-section">
+                <a
+                  href="https://github.com/kwasniew/corona"
+                  class="btn btn-link text-light"
+                  >GitHub</a
+                >
+              </section>
+            </div>
+            <div class="hero hero-sm">
+              <div class="hero-body columns">
+                <div class="column col-auto">
+                  <figure
+                    class="avatar avatar-xl badge"
+                    data-badge="19"
+                    data-initial="YZ"
+                  >
+                    <img
+                      src="https://picturepan2.github.io/spectre/img/avatar-1.png"
+                    />
+                  </figure>
+                </div>
+                <div class="column column-center text-bold">
+                  Reported Coronavirus cases trends by country
+                </div>
+              </div>
+            </div>
+          </header>
         </div>
-        <div class="mt-2">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1001">
-            ${sortedCountryNames.map(countrySvg(state))}
-          </svg>
-        </div>
-        ${selectedCountries(state)}
-
-        <table class="table">
-          <tr>
-            ${tableHeader("name", "Country")(state)}
-            ${tableHeader("weeklyGrowth", "Weekly Growth Rate")(state)}
-            ${tableHeader("totalCases", "Total cases")(state)}
-            ${tableHeader("lastWeekCases", "Last week cases")(state)}
-          </tr>
-          ${sorted(state).map(
-            ({ name, weeklyGrowth, totalCases, lastWeekCases }) => html`
-              <tr
-                class="c-hand"
-                onclick=${countryAction(state)(name)}
-                style=${countryHighlight(state)(name)}
+        <div class="container grid-md">
+          ${selectedCountries(state)}
+          <canvas id="chart"></canvas>
+          <div class="mt-2">
+            <div class=" form-group input-group">
+              <select
+                oninput=${[AddSelectedCountry, targetValue]}
+                class="countries form-select"
               >
-                <td>${name}</td>
-                <td>${weeklyGrowth}%</td>
-                <td>${totalCases}</td>
-                <td>${lastWeekCases}</td>
-              </tr>
-            `
-          )}
-        </table>
+                ${sortedCountryNames.map(name =>
+                  selectedOption(state.currentCountry, name)
+                )}
+              </select>
+            </div>
+          </div>
+          <div class="mt-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1001">
+              ${sortedCountryNames.map(countrySvg(state))}
+            </svg>
+          </div>
+          ${selectedCountries(state)}
+        </div>
+        <div class="bg-gray">
+          <table class="table container grid-md">
+            <tr>
+              ${tableHeader("name", "Country")(state)}
+              ${tableHeader("weeklyGrowth", "Weekly Growth Rate")(state)}
+              ${tableHeader("totalCases", "Total cases")(state)}
+              ${tableHeader("lastWeekCases", "Last week cases")(state)}
+            </tr>
+            ${sorted(state).map(
+              ({ name, weeklyGrowth, totalCases, lastWeekCases }) => html`
+                <tr
+                  class="c-hand"
+                  onclick=${countryAction(state)(name)}
+                  style=${countryHighlight(state)(name)}
+                >
+                  <td>${name}</td>
+                  <td>${weeklyGrowth}%</td>
+                  <td>${totalCases}</td>
+                  <td>${lastWeekCases}</td>
+                </tr>
+              `
+            )}
+          </table>
+        </div>
       </div>
     `,
   node: document.getElementById("control-panel")
