@@ -204,7 +204,7 @@ const selectedCountries = state => html`
 `;
 
 const Container = (props, children) => html`
-  <div class="${props.class || ""}">
+  <div class="${props.class || ""} mt-2 pt-2 pb-2">
     <div class="container grid-md">
       ${children}
     </div>
@@ -288,7 +288,7 @@ const map = state => html`
 `;
 
 const select = state => html`
-  <div class="mt-2">
+  <div class="m-2 p-2">
     <div class=" form-group input-group">
       <select
         oninput=${[AddSelectedCountry, targetValue]}
