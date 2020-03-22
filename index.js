@@ -4,35 +4,18 @@ import htm from "./web_modules/htm.js";
 import { preventDefault, targetValue } from "./web_modules/@hyperapp/events.js";
 import { stringToHex } from "./stringToColor.js";
 import { countries } from "./countries.js";
-import mapValues from "./web_modules/lodash.mapvalues.js";
 import orderBy from "./web_modules/lodash.orderby.js";
-import prop from "./web_modules/lodash.property.js";
 import pick from "./web_modules/lodash.pick.js";
 import { updateChart } from "./chart.js";
-import { calculateCasesInLastDays, calculateGrowth } from "./stats.js";
+import { addCustomStatsToReport } from "./stats.js";
 import cc from "./web_modules/classcat.js";
 
 const html = htm.bind(h);
 
-const calculateExtraStats = (stats, reportType) => {
-  const extractReportType = prop(reportType);
-  return {
-    weeklyGrowth: calculateGrowth(stats.map(extractReportType), 7),
-    lastWeekCases: calculateCasesInLastDays(stats.map(extractReportType), 7),
-    totalCases: extractReportType(stats[stats.length - 1])
-  };
-};
-
-const enhanceReport = (report, reportType) => {
-  return mapValues(report, stats =>
-    Object.assign(stats, calculateExtraStats(stats, reportType))
-  );
-};
-
 const GotReport = (state, report) => {
   const newState = {
     ...state,
-    report: enhanceReport(report, state.reportType)
+    report: addCustomStatsToReport({report, reportType: state.reportType})
   };
   return [newState, [updateChart(newState)]];
 };
@@ -58,7 +41,7 @@ const SelectCountry = currentCountry => state => {
   return newState;
 };
 const ChangeReportType = reportType => state => {
-    const report = enhanceReport(state.report, reportType);
+  const report = addCustomStatsToReport({report: state.report, reportType});
   const newState = { ...state, reportType, report };
   return [newState, [updateChart(newState)]];
 };
