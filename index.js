@@ -318,8 +318,8 @@ app({
                     />
                   </figure>
                 </div>
-                <div class="column column-center text-bold">
-                  Reported Coronavirus cases trends by country
+                <div class="column column-center">
+                  <kbd class="text-large">Reported Coronavirus cases trends by country</kbd>
                 </div>
               </div>
             </div>
