@@ -8,32 +8,17 @@ import mapValues from "./web_modules/lodash.mapvalues.js";
 import orderBy from "./web_modules/lodash.orderby.js";
 import pick from "./web_modules/lodash.pick.js";
 import { updateChart } from "./chart.js";
+import { calculateGrowth, calculateCasesInLastDays } from "./stats.js";
 
 const confirmed = stats => stats.confirmed;
 
 const html = htm.bind(h);
 
-const lastNDays = (dataPoints, days) => dataPoints.slice(-days);
-
-const calculateGrowth = (dataPoints, days) => {
-  const lastDays = lastNDays(dataPoints, days);
-  const past = lastDays[0] || 1;
-  const present = lastDays[lastDays.length - 1];
-  return (100 * (present - past)) / past;
-};
-
-const lastWeekCases = dataPoints => {
-  const lastDays = lastNDays(dataPoints, 7);
-  const past = lastDays[0];
-  const present = lastDays[lastDays.length - 1];
-  return present - past;
-};
-
 const GotReport = (state, report) => {
   const enhancedReport = mapValues(report, stats =>
     Object.assign(stats, {
-      weeklyGrowth: Math.round(calculateGrowth(stats.map(confirmed), 7)),
-      lastWeekCases: lastWeekCases(stats.map(confirmed)),
+      weeklyGrowth: calculateGrowth(stats.map(confirmed), 7),
+      lastWeekCases: calculateCasesInLastDays(stats.map(confirmed), 7),
       totalCases: confirmed(stats[stats.length - 1])
     })
   );
