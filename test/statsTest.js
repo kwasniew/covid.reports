@@ -1,5 +1,9 @@
 import test from "tape";
-import { calculateGrowth, calculateCasesInLastDays, addCustomStatsToReport } from "../stats.js";
+import {
+  calculateGrowth,
+  calculateCasesInLastDays,
+  addCustomStatsToReport
+} from "../stats.js";
 
 test("calculate growth", t => {
   t.deepEqual(calculateGrowth([1, 1, 1], 3), 0, "no growth");
@@ -38,12 +42,23 @@ test("calculate cases in last days", t => {
 
 test("add custom stats to report", t => {
   const report = {
-    "Country A": [{confirmed: 1}, {confirmed: 2}, {confirmed: 3}, {confirmed: 4}]
+    "Country A": [
+      { confirmed: 1 },
+      { confirmed: 2 },
+      { confirmed: 3 },
+      { confirmed: 4 }
+    ]
   };
   const enhancedReport = {
-    "Country A": Object.assign([{confirmed: 1}, {confirmed: 2}, {confirmed: 3}, {confirmed: 4}], {growth: 100, lastCases: 2, totalCases: 4})
+    "Country A": Object.assign(
+      [{ confirmed: 1 }, { confirmed: 2 }, { confirmed: 3 }, { confirmed: 4 }],
+      { growth: 100, lastCases: 2, totalCases: 4 }
+    )
   };
-  t.deepEqual(addCustomStatsToReport({report, reportType: "confirmed", days: 3}), enhancedReport);
+  t.deepEqual(
+    addCustomStatsToReport({ report, reportType: "confirmed", days: 3 }),
+    enhancedReport
+  );
 
   t.end();
 });

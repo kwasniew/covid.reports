@@ -15,7 +15,7 @@ const html = htm.bind(h);
 const GotReport = (state, report) => {
   const newState = {
     ...state,
-    report: addCustomStatsToReport({report, reportType: state.reportType})
+    report: addCustomStatsToReport({ report, reportType: state.reportType })
   };
   return [newState, [updateChart(newState)]];
 };
@@ -41,8 +41,13 @@ const SelectCountry = currentCountry => state => {
   return newState;
 };
 const ChangeReportType = reportType => state => {
-  const report = addCustomStatsToReport({report: state.report, reportType});
-  const newState = { ...state, reportType, report, sortOrder: ["lastCases", "desc"] };
+  const report = addCustomStatsToReport({ report: state.report, reportType });
+  const newState = {
+    ...state,
+    reportType,
+    report,
+    sortOrder: ["lastCases", "desc"]
+  };
   return [newState, [updateChart(newState)]];
 };
 
@@ -140,7 +145,7 @@ const sorted = ({ report, sortOrder: [sortBy, asc] }) =>
     Object.entries(pick(report, sortedCountryNames)).map(
       ([name, { growth, totalCases, lastCases }]) => ({
         name,
-          growth,
+        growth,
         totalCases,
         lastCases
       })
@@ -299,13 +304,12 @@ const chart = html`
     <figure class="figure">
       <canvas id="chart"></canvas>
       <figcaption class="figure-caption text-right text-normal">
-        <sup
-          >*Data comes from
-          <a href="https://github.com/pomber/covid19"
-            >https://github.com/pomber/covid19</a
-          >
-          and is updated three times a day.</sup
-        >
+        <sup>
+          ${"*Data comes from "}
+          <a href="https://github.com/pomber/covid19">
+            https://github.com/pomber/covid19 </a
+          >${" and is updated three times a day."}
+        </sup>
       </figcaption>
     </figure>
   </div>

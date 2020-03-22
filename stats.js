@@ -18,7 +18,7 @@ export const calculateCasesInLastDays = (dataPoints, days) => {
   return Math.max(present - past, 0);
 };
 
-const calculateCustomStats = ({stats, reportType, days}) => {
+const calculateCustomStats = ({ stats, reportType, days }) => {
   const extractReportType = prop(reportType);
   return {
     growth: calculateGrowth(stats.map(extractReportType), days),
@@ -27,8 +27,8 @@ const calculateCustomStats = ({stats, reportType, days}) => {
   };
 };
 
-export const addCustomStatsToReport = ({report, reportType, days = 7}) => {
+export const addCustomStatsToReport = ({ report, reportType, days = 7 }) => {
   return mapValues(report, stats =>
-      Object.assign(stats, calculateCustomStats({stats, reportType, days}))
+    Object.assign(stats, calculateCustomStats({ stats, reportType, days }))
   );
 };
