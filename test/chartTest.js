@@ -90,12 +90,8 @@ test("no selected countries", t => {
     selectedCountries: [],
     reportType: "confirmed",
     report: {
-      "Country A": [
-        { date: "2020-1-22", confirmed: 0 }
-      ],
-      "Country B": [
-        { date: "2020-1-22", confirmed: 0 }
-      ]
+      "Country A": [{ date: "2020-1-22", confirmed: 0 }],
+      "Country B": [{ date: "2020-1-22", confirmed: 0 }]
     }
   };
   const chartData = {
@@ -107,4 +103,3 @@ test("no selected countries", t => {
 
   t.end();
 });
-
