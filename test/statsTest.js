@@ -38,8 +38,12 @@ test("calculate cases in last days", t => {
 
 test("add custom stats to report", t => {
   const report = {
-    "Country A": [{confirmed: 0}, {confirmed: 1}, {confirmed: 0}, {confirmed: 0}]
+    "Country A": [{confirmed: 1}, {confirmed: 2}, {confirmed: 3}, {confirmed: 4}]
   };
+  const enhancedReport = {
+    "Country A": Object.assign([{confirmed: 1}, {confirmed: 2}, {confirmed: 3}, {confirmed: 4}], {weeklyGrowth: 100, lastWeekCases: 2, totalCases: 4})
+  };
+  t.deepEqual(addCustomStatsToReport({report, reportType: "confirmed", days: 3}), enhancedReport);
 
   t.end();
-})
+});
