@@ -8,6 +8,10 @@ import prop from "./web_modules/lodash.property.js";
 let chart = null;
 const makeChart = data => {
   if (chart) {
+    // chart.data.labels.pop();
+    // chart.data.datasets.forEach((dataset) => {
+    //   dataset.data.pop();
+    // });
     chart.data.labels = data.labels;
     chart.data.datasets = data.datasets;
     chart.update();
@@ -32,44 +36,53 @@ const makeChart = data => {
   });
 };
 
-export const toChartData = state => {
-  const datasets = state.selectedCountries
-    .map(name => {
-      const { r, g, b } = stringToRGB(name);
-      return state.report[name]
-        ? {
-            label: name,
-            data: state.report[name].map(prop(state.reportType)),
-            backgroundColor: `rgba(${r}, ${g}, ${b}, 0.2)`,
-            pointBackgroundColor: `rgba(${r}, ${g}, ${b}, 1)`,
-            borderColor: `rgba(${r}, ${g}, ${b}, 1)`
-          }
-        : null;
-    })
-    .filter(x => x);
+const toChartDataItem = ({report, reportType}) => name => {
+  const { r, g, b } = stringToRGB(name);
+  return report[name]
+      ? {
+        label: name,
+        data: report[name].map(prop(reportType)),
+        backgroundColor: `rgba(${r}, ${g}, ${b}, 0.2)`,
+        pointBackgroundColor: `rgba(${r}, ${g}, ${b}, 1)`,
+        borderColor: `rgba(${r}, ${g}, ${b}, 1)`
+      }
+      : null;
+};
 
+const trimLeadingData = datasets => {
   const days = dropWhile(zip(...datasets.map(set => set.data)), cases =>
-    cases.every(x => x === 0)
+      cases.every(x => x === 0)
   );
   const length = days.length;
   const cleanData = unzip(
-    dropWhile(zip(...datasets.map(set => set.data)), cases =>
-      cases.every(x => x === 0)
-    )
+      dropWhile(zip(...datasets.map(set => set.data)), cases =>
+          cases.every(x => x === 0)
+      )
   );
 
   const cleanDatasets = datasets.map((dataset, i) => ({
     ...dataset,
-    data: cleanData[i]
+    data: cleanData[i] || []
   }));
 
+  return {cleanDatasets, length};
+};
+
+const trimLeadingLabels = ({report, datasets, length}) => {
   const [first] = datasets;
-  return {
-    labels: first
-      ? state.report[first.label].map(stats => stats.date).slice(-length)
-      : [],
-    datasets: cleanDatasets
-  };
+  return first && first.data.length > 0
+      ? report[first.label].map(stats => stats.date).slice(-length)
+      : [];
+};
+
+export const toChartData = ({selectedCountries, reportType, report}) => {
+  const datasets = selectedCountries
+    .map(toChartDataItem({report, reportType}))
+    .filter(x => x);
+  const {cleanDatasets, length} = trimLeadingData(datasets);
+
+  const labels = trimLeadingLabels({report, datasets: cleanDatasets, length});
+  return {labels, datasets: cleanDatasets};
 };
 
 export const updateChart = state => [
