@@ -129,6 +129,13 @@ const AddCountry = currentCountry => state => {
   };
   return [newState, [updateChart(newState)]];
 };
+const SelectCountry = currentCountry => state => {
+    const newState = {
+        ...state,
+        currentCountry
+    };
+    return newState;
+};
 
 const unique = list => [...new Set(list)];
 const AddSelectedCountry = (state, currentCountry) =>
@@ -197,6 +204,7 @@ const countrySvg = state => country => {
   if (isCountryActive) {
     return html`
       <path
+        onmouseover=${SelectCountry(country)}
         stroke="${stringToHex(country)}"
         fill="${stringToHex(country)}"
         onclick=${RemoveCountry(country)}
@@ -207,6 +215,7 @@ const countrySvg = state => country => {
   } else {
     return html`
       <path
+        onmouseover=${SelectCountry(country)}
         onclick=${AddCountry(country)}
         fill="#dddddd"
         stroke="#111111"
