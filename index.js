@@ -314,22 +314,21 @@ const main = state => html`
 `;
 
 const view = state =>
-    html`
-      <div>
-        ${header} ${main(state)} ${table(state)}
-      </div>
-    `;
+  html`
+    <div>
+      ${header} ${main(state)} ${table(state)}
+    </div>
+  `;
+
+const initialState = {
+  report: {},
+  currentCountry: "Italy",
+  selectedCountries: ["China", "Italy"],
+  sortOrder: ["lastWeekCases", "desc"]
+};
 
 app({
-  init: [
-    {
-      report: {},
-      currentCountry: "Italy",
-      selectedCountries: ["China", "Italy"],
-      sortOrder: ["lastWeekCases", "desc"]
-    },
-    fetchReport
-  ],
+  init: [initialState, fetchReport],
   view,
   node: document.getElementById("app")
 });
