@@ -211,72 +211,80 @@ const selectedCountries = state => html`
   </div>
 `;
 
-const header = html`
-  <div class="bg-primary">
-    <header class="container grid-md">
-      <div class="navbar">
-        <section class="navbar-section">
-          <span class="navbar-brand text-bold text-light mt-2"
-            >Covid Reports</span
-          >
-        </section>
-        <section class="navbar-section">
-          <a
-            href="https://github.com/kwasniew/corona"
-            class="btn btn-link text-light"
-            >GitHub</a
-          >
-        </section>
-      </div>
-      <div class="hero hero-sm">
-        <div class="hero-body columns">
-          <div class="column col-auto">
-            <figure
-              class="avatar avatar-xl badge"
-              data-badge="19"
-              data-initial="YZ"
-            >
-              <img
-                src="https://picturepan2.github.io/spectre/img/avatar-1.png"
-              />
-            </figure>
-          </div>
-          <div class="column column-center">
-            <kbd class="text-large"
-              >Reported Coronavirus cases trends by country</kbd
-            >
-          </div>
-        </div>
-      </div>
-    </header>
+const Container = (props, children) => html`
+  <div class="${props.class || ""}">
+    <div class="container grid-md">
+      ${children}
+    </div>
   </div>
 `;
 
+const header = html`
+  <${Container} class="bg-primary">
+      <header>
+        <div class="navbar">
+          <section class="navbar-section">
+            <span class="navbar-brand text-bold text-light mt-2"
+              >Covid Reports</span
+            >
+          </section>
+          <section class="navbar-section">
+            <a
+              href="https://github.com/kwasniew/corona"
+              class="btn btn-link text-light"
+              >GitHub</a
+            >
+          </section>
+        </div>
+        <div class="hero hero-sm">
+          <div class="hero-body columns">
+            <div class="column col-auto">
+              <figure
+                class="avatar avatar-xl badge"
+                data-badge="19"
+                data-initial="YZ"
+              >
+                <img
+                  src="https://picturepan2.github.io/spectre/img/avatar-1.png"
+                />
+              </figure>
+            </div>
+            <div class="column column-center">
+              <kbd class="text-large"
+                >Reported Coronavirus cases trends by country</kbd
+              >
+            </div>
+          </div>
+        </div>
+      </header>
+  </Container>
+`;
+
 const table = state => html`
-  <div class="bg-gray">
-    <table class="table container grid-md">
-      <tr>
-        ${tableHeader("name", "Country")(state)}
-        ${tableHeader("weeklyGrowth", "Weekly Growth Rate")(state)}
-        ${tableHeader("totalCases", "Total cases")(state)}
-        ${tableHeader("lastWeekCases", "Last week cases")(state)}
-      </tr>
-      ${sorted(state).map(
-        ({ name, weeklyGrowth, totalCases, lastWeekCases }) => html`
-          <tr
-            class="c-hand"
-            onclick=${countryAction(state)(name)}
-            style=${countryHighlight(state)(name)}
-          >
-            <td>${chipOrName(name)(state)}</td>
-            <td>${weeklyGrowth}%</td>
-            <td>${totalCases}</td>
-            <td>${lastWeekCases}</td>
+  <${Container} class="bg-gray">
+        <table class="table">
+          <tr>
+            ${tableHeader("name", "Country")(state)}
+            ${tableHeader("weeklyGrowth", "Weekly Growth Rate")(state)}
+            ${tableHeader("totalCases", "Total cases")(state)}
+            ${tableHeader("lastWeekCases", "Last week cases")(state)}
           </tr>
-        `
-      )}
-    </table>
-  </div>
+          ${sorted(state).map(
+            ({ name, weeklyGrowth, totalCases, lastWeekCases }) => html`
+              <tr
+                class="c-hand"
+                onclick=${countryAction(state)(name)}
+                style=${countryHighlight(state)(name)}
+              >
+                <td>${chipOrName(name)(state)}</td>
+                <td>${weeklyGrowth}%</td>
+                <td>${totalCases}</td>
+                <td>${lastWeekCases}</td>
+              </tr>
+            `
+          )}
+        </table>
+  </Container>
 `;
 
 const map = state => html`
@@ -307,10 +315,10 @@ const chart = html`
 `;
 
 const main = state => html`
-  <div class="container grid-md">
-    ${selectedCountries(state)} ${chart} ${select(state)} ${map(state)}
-    ${selectedCountries(state)}
-  </div>
+  <${Container}>
+      ${selectedCountries(state)} ${chart} ${select(state)} ${map(state)}
+      ${selectedCountries(state)}
+   </Container>
 `;
 
 const view = state =>
