@@ -6,7 +6,7 @@ import { stringToHex } from "./stringToColor.js";
 import { countries } from "./countries.js";
 import orderBy from "./web_modules/lodash.orderby.js";
 import pick from "./web_modules/lodash.pick.js";
-import { updateChart } from "./chart.js";
+import { updateChart, ChartListen } from "./chart.js";
 import { addCustomStatsToReport } from "./stats.js";
 import cc from "./web_modules/classcat.js";
 
@@ -24,6 +24,16 @@ const fetchReport = request({
   expect: "json",
   action: GotReport
 });
+
+const SetDateFrom = (state, dateFrom) => {
+    const newState = {...state, dateFrom};
+    return [newState, [updateChart(newState)]];
+};
+
+const RemoveDateFrom = state => {
+    const newState = {...state, dateFrom: ""};
+    return [newState, [updateChart(newState)]];
+};
 
 const AddCountry = currentCountry => state => {
   const newState = {
@@ -175,7 +185,22 @@ const tableHeader = (name, text) => state => {
   `;
 };
 
-const chip = name => state => html`
+const dateChip = dateFrom => dateFrom ? html`
+  <span
+    class="chip"
+    onclick=${RemoveDateFrom}
+  >
+    ${dateFrom}
+    <span
+      class="btn btn-clear"
+      href="#"
+      aria-label="Remove Date"
+      role="button"
+    ></span>
+  </span>
+` : "";
+
+const countryChip = name => state => html`
   <span
     class="chip"
     onclick=${countryAction(state)(name)}
@@ -185,18 +210,19 @@ const chip = name => state => html`
     <span
       class="btn btn-clear"
       href="#"
-      aria-label="Close"
+      aria-label="Remove Country"
       role="button"
     ></span>
   </span>
 `;
 
 const chipOrName = name => state =>
-  isActive(state)(name) ? chip(name)(state) : name;
+  isActive(state)(name) ? countryChip(name)(state) : name;
 
-const selectedCountries = state => html`
+const selectionCriteria = state => html`
   <div class="m-2">
-    ${Array.from(state.selectedCountries).map(name => chip(name)(state))}
+    ${dateChip(state.dateFrom)}
+    ${Array.from(state.selectedCountries).map(name => countryChip(name)(state))}
   </div>
 `;
 
@@ -317,8 +343,8 @@ const chart = html`
 
 const main = state => html`
   <${Container}>
-      ${selectedCountries(state)} ${chart} ${select(state)} ${map(state)}
-      ${selectedCountries(state)}
+      ${selectionCriteria(state)} ${chart} ${select(state)} ${map(state)}
+      ${selectionCriteria(state)}
    </Container>
 `;
 
@@ -355,7 +381,7 @@ const initialState = {
 };
 
 app({
-  init: [initialState, fetchReport],
+  init: [initialState, fetchReport, ChartListen(SetDateFrom)],
   view,
   node: document.getElementById("app")
 });
