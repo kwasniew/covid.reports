@@ -21,8 +21,8 @@ export const calculateCasesInLastDays = (dataPoints, days) => {
 const calculateCustomStats = ({stats, reportType, days}) => {
   const extractReportType = prop(reportType);
   return {
-    weeklyGrowth: calculateGrowth(stats.map(extractReportType), days),
-    lastWeekCases: calculateCasesInLastDays(stats.map(extractReportType), days),
+    growth: calculateGrowth(stats.map(extractReportType), days),
+    lastCases: calculateCasesInLastDays(stats.map(extractReportType), days),
     totalCases: extractReportType(stats[stats.length - 1])
   };
 };

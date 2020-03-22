@@ -42,7 +42,7 @@ const SelectCountry = currentCountry => state => {
 };
 const ChangeReportType = reportType => state => {
   const report = addCustomStatsToReport({report: state.report, reportType});
-  const newState = { ...state, reportType, report, sortOrder: ["lastWeekCases", "desc"] };
+  const newState = { ...state, reportType, report, sortOrder: ["lastCases", "desc"] };
   return [newState, [updateChart(newState)]];
 };
 
@@ -138,11 +138,11 @@ const countrySvg = state => country => {
 const sorted = ({ report, sortOrder: [sortBy, asc] }) =>
   orderBy(
     Object.entries(pick(report, sortedCountryNames)).map(
-      ([name, { weeklyGrowth, totalCases, lastWeekCases }]) => ({
+      ([name, { growth, totalCases, lastCases }]) => ({
         name,
-        weeklyGrowth,
+          growth,
         totalCases,
-        lastWeekCases
+        lastCases
       })
     ),
     [sortBy],
@@ -249,21 +249,21 @@ const table = state => html`
         <table class="table">
           <tr>
             ${tableHeader("name", "Country")(state)}
-            ${tableHeader("weeklyGrowth", "Weekly Growth Rate")(state)}
+            ${tableHeader("growth", "Weekly Growth Rate")(state)}
             ${tableHeader("totalCases", "Total cases")(state)}
-            ${tableHeader("lastWeekCases", "Last week cases")(state)}
+            ${tableHeader("lastCases", "Last week cases")(state)}
           </tr>
           ${sorted(state).map(
-            ({ name, weeklyGrowth, totalCases, lastWeekCases }) => html`
+            ({ name, growth, totalCases, lastCases }) => html`
               <tr
                 class="c-hand"
                 onclick=${countryAction(state)(name)}
                 style=${countryHighlight(state)(name)}
               >
                 <td>${chipOrName(name)(state)}</td>
-                <td>${weeklyGrowth}%</td>
+                <td>${growth}%</td>
                 <td>${totalCases}</td>
-                <td>${lastWeekCases}</td>
+                <td>${lastCases}</td>
               </tr>
             `
           )}
@@ -347,7 +347,7 @@ const initialState = {
   reportType: "confirmed",
   currentCountry: "Italy",
   selectedCountries: ["China", "Italy"],
-  sortOrder: ["lastWeekCases", "desc"]
+  sortOrder: ["lastCases", "desc"]
 };
 
 app({
