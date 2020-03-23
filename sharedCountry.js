@@ -20,8 +20,8 @@ export const RemoveCountry = country => state => {
   return [newState, [updateChart(newState)]];
 };
 
-export const isActive = state => country =>
-  state.selectedCountries.includes(country);
+export const isActive = ({ selectedCountries }) => country =>
+  selectedCountries.includes(country);
 
 export const countryAction = state => country => {
   const isCountryActive = isActive(state)(country);
