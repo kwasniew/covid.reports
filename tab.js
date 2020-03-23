@@ -30,5 +30,5 @@ export const tab = ({ reportType }) => html`
         )}>Deaths</a>
       </li>
     </ul>
- </Container>
+ </${Container}>
 `;

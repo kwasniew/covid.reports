@@ -89,5 +89,5 @@ export const table = state => html`
             `
           )}
         </table>
-  </Container>
+  </${Container}>
 `;

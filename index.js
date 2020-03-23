@@ -14,7 +14,7 @@ const main = state => html`
   <${Container}>
       ${chips(state)} ${chartView} ${select(state)} ${worldMap(state)} 
       ${chips(state)}
-  </Container>
+  </${Container}>
 `;
 
 const view = state =>
