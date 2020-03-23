@@ -9,10 +9,13 @@ import { table } from "./table.js";
 import { select } from "./select.js";
 import { chips } from "./chips.js";
 import { fetchReport } from "./fetch.js";
+import { alignToPatientZero } from "./alignToPatientZero";
 
 const main = state => html`
   <${Container}>
-      ${chips(state)} ${chartView} ${select(state)} ${worldMap(state)} 
+      ${chips(state)} ${chartView} ${alignToPatientZero(state)} ${select(
+  state
+)} ${worldMap(state)} 
       ${chips(state)}
   </Container>
 `;
@@ -29,7 +32,8 @@ const initialState = {
   reportType: "confirmed",
   currentCountry: "Italy",
   selectedCountries: ["China", "Italy"],
-  sortOrder: ["lastCases", "desc"]
+  sortOrder: ["lastCases", "desc"],
+  alignToPatientZero: false
 };
 
 app({

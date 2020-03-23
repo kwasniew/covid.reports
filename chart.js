@@ -74,7 +74,8 @@ const toChartDataItem = ({ report, reportType }) => name => {
     : null;
 };
 
-const isZerosArray = cases => cases.every(x => x === 0);
+const isZero = x => x === 0;
+const isZerosArray = cases => cases.every(isZero);
 
 const trimLeadingData = datasets => {
   const daysWithCases = dropWhile(
@@ -122,11 +123,32 @@ const fromPatientZeroStrategy = ({ report, datasets }) => {
   return { labels, datasets: cleanDatasets };
 };
 
+const alignToPatientZeroStrategy = ({ datasets }) => {
+  const trimmedDatasets = datasets.map(dataset => {
+    return {
+      ...dataset,
+      data: dropWhile(dataset.data, isZero)
+    };
+  });
+
+  const longestDatasetLength = trimmedDatasets.reduce((days, dataset) => {
+    return dataset.data.length > days ? dataset.data.length : days;
+  }, 0);
+
+  return {
+    labels: Array.from({ length: longestDatasetLength }, (v, i) =>
+      (i + 1).toString()
+    ),
+    datasets: trimmedDatasets
+  };
+};
+
 export const toChartData = ({
   selectedCountries,
   reportType,
   report,
-  dateFrom
+  dateFrom,
+  alignToPatientZero
 }) => {
   const countryExists = x => x;
   const datasets = selectedCountries
@@ -135,6 +157,8 @@ export const toChartData = ({
 
   if (dateFrom) {
     return dateBasedStrategy({ report, datasets, dateFrom });
+  } else if (alignToPatientZero) {
+    return alignToPatientZeroStrategy({ report, datasets });
   } else {
     return fromPatientZeroStrategy({ report, datasets });
   }
