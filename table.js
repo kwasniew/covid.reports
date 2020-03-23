@@ -10,7 +10,7 @@ import {
   isActive
 } from "./sharedCountry.js";
 
-const sorted = ({ report, sortOrder: [sortBy, asc] }) =>
+export const sortReport = ({ report, sortOrder: [sortBy, asc] }) =>
   orderBy(
     Object.entries(pick(report, sortedCountryNames)).map(
       ([name, { growth, totalCases, lastCases }]) => ({
@@ -74,7 +74,7 @@ export const table = state => html`
             ${tableHeader("totalCases", "Total cases")(state)}
             ${tableHeader("lastCases", "Last week cases")(state)}
           </tr>
-          ${sorted(state).map(
+          ${sortReport(state).map(
             ({ name, growth, totalCases, lastCases }) => html`
               <tr
                 class="c-hand"
