@@ -7,7 +7,7 @@ export const header = html`
         <div class="navbar">
           <section class="navbar-section">
             <span class="navbar-brand text-bold text-light mt-2"
-              >Covid Reports</span
+              >COVID Reports</span
             >
           </section>
           <section class="navbar-section">
