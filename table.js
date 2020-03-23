@@ -26,7 +26,7 @@ const sorted = ({ report, sortOrder: [sortBy, asc] }) =>
 
 const negateOrder = order => (order === "asc" ? "desc" : "asc");
 
-const SortBy = newSortBy => state => {
+export const SortBy = newSortBy => state => {
   const [oldSortBy, oldDirection] = state.sortOrder;
   return {
     ...state,
