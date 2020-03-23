@@ -4,6 +4,7 @@ import dropWhile from "./web_modules/lodash.dropwhile.js";
 import zip from "./web_modules/lodash.zip.js";
 import unzip from "./web_modules/lodash.unzip.js";
 import prop from "./web_modules/lodash.property.js";
+import { html } from "./html.js";
 
 let chart;
 const updateChartData = data => {
@@ -29,19 +30,26 @@ const createChart = ({ labels, datasets }) =>
         if (item.length > 0) {
           const { _index } = item[0];
           const label = chart.data.labels[_index];
-          ChartListen.dispatch(label);
+          ChartSubscription.dispatch(label);
         }
       }
     }
   });
 
-export const ChartListen = action => [
+const ChartSubscription = action => [
   (dispatch, action) => {
-    ChartListen.dispatch = label => dispatch(action, label);
+    ChartSubscription.dispatch = label => dispatch(action, label);
     return () => {};
   },
   action
 ];
+
+const SetDateFrom = (state, dateFrom) => {
+  const newState = { ...state, dateFrom };
+  return [newState, [updateChart(newState)]];
+};
+
+export const ChartListen = ChartSubscription(SetDateFrom);
 
 const createOrUpdateChart = data => {
   if (chart) {
@@ -137,3 +145,19 @@ export const updateChart = state => [
     createOrUpdateChart(toChartData(state));
   }
 ];
+
+export const chartView = html`
+  <div>
+    <figure class="figure">
+      <canvas id="chart"></canvas>
+      <figcaption class="figure-caption text-right text-normal">
+        <sup>
+          ${"*Data comes from "}
+          <a href="https://github.com/pomber/covid19">
+            https://github.com/pomber/covid19 </a
+          >${" and is updated three times a day."}
+        </sup>
+      </figcaption>
+    </figure>
+  </div>
+`;

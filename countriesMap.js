@@ -1,4 +1,7 @@
-// import without from "./web_modules/lodash.without.js";
+import { stringToHex } from "./stringToColor.js";
+import { AddCountry, RemoveCountry } from "./sharedCountry.js";
+import { html } from "./html.js";
+import { isActive } from "./sharedCountry.js";
 
 const countries = {
   Afghanistan: {
@@ -835,10 +838,50 @@ const countries = {
   }
 };
 
-// fetch("https://pomber.github.io/covid19/timeseries.json").then(res => res.json()).then(
-//     (data) => {
-//       console.log("result", without(Object.keys(countries), ...Object.keys(data)));
-//     }
-// );
+const SelectCountry = currentCountry => state => {
+  const newState = {
+    ...state,
+    currentCountry
+  };
+  return newState;
+};
 
-export { countries };
+const countrySvg = state => country => {
+  const isCountryActive = isActive(state)(country);
+
+  if (isCountryActive) {
+    return html`
+      <path
+        onmouseover=${SelectCountry(country)}
+        onclick=${RemoveCountry(country)}
+        stroke="${stringToHex(country)}"
+        fill="${stringToHex(country)}"
+        id="${country}"
+        d="${countries[country].d}"
+      />
+    `;
+  } else {
+    return html`
+      <path
+        onmouseover=${SelectCountry(country)}
+        onclick=${AddCountry(country)}
+        stroke="#111111"
+        fill="#dddddd"
+        id="${country}"
+        d="${countries[country].d}"
+      />
+    `;
+  }
+};
+
+const sortedCountryNames = Object.keys(countries).sort();
+
+const worldMap = state => html`
+  <div class="mt-2">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1001">
+      ${sortedCountryNames.map(countrySvg(state))}
+    </svg>
+  </div>
+`;
+
+export { worldMap, sortedCountryNames };
