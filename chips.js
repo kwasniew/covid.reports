@@ -1,5 +1,5 @@
 import { html } from "./html.js";
-import { countryChip } from "./sharedCountry.js";
+import { countryChip } from "./country.js";
 import { updateChart } from "./chart.js";
 
 const RemoveFromSelector = state => {

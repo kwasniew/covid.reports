@@ -8,7 +8,7 @@ import {
   countryHighlight,
   countryChip,
   isActive
-} from "./sharedCountry.js";
+} from "./country.js";
 
 export const sortReport = ({ report, sortOrder: [sortBy, asc] }) =>
   orderBy(

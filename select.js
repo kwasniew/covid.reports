@@ -1,7 +1,7 @@
 import { html } from "./html.js";
 import { targetValue } from "./web_modules/@hyperapp/events.js";
 import { sortedCountryNames } from "./countriesMap.js";
-import { AddCountry } from "./sharedCountry.js";
+import { AddCountry } from "./country.js";
 
 const AddSelectedCountry = (state, currentCountry) =>
   AddCountry(currentCountry)(state);

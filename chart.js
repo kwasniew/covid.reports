@@ -191,7 +191,7 @@ export const chartView = html`
           ${"*Data comes from "}
           <a href="https://github.com/pomber/covid19">
             https://github.com/pomber/covid19 </a
-          >${" and is updated three times a day."}
+          >${" and is updated three times a day. Hopefully it will contain number of tests in future."}
         </sup>
       </figcaption>
     </figure>

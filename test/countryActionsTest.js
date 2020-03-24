@@ -1,5 +1,5 @@
 import test from "tape";
-import { AddCountry, RemoveCountry, countryAction } from "../sharedCountry.js";
+import { AddCountry, RemoveCountry, countryAction } from "../country.js";
 
 test("add country", t => {
   const oldState = {

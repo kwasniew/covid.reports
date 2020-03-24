@@ -1,7 +1,7 @@
 import { stringToHex } from "./stringToColor.js";
-import { AddCountry, RemoveCountry } from "./sharedCountry.js";
+import { AddCountry, RemoveCountry } from "./country.js";
 import { html } from "./html.js";
-import { isActive } from "./sharedCountry.js";
+import { isActive } from "./country.js";
 
 const countries = {
   Afghanistan: {
