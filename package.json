@@ -1,10 +1,12 @@
 {
   "scripts": {
     "prebuild": "npm run snowpack",
+    "postinstall": "npm run snowpack",
     "build": "parcel build index.html",
     "test": "tape -r esm test/*Test.js | tap-diff",
     "snowpack": "snowpack --include '*.js'",
-    "format": "prettier --write '{.,test}/*.js'"
+    "format": "prettier --write '{.,test}/*.js'",
+    "prod": "npm run format && npm run test && npm run build"
   },
   "dependencies": {
     "@hyperapp/events": "0.0.4",
