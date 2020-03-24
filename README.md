@@ -5,6 +5,7 @@
 Install deps and open root directory on any HTTP server.
 
 ```npm i```
+
 ```http-server .``` 
 
 Note 1: Using bundler in development is discouraged.
