@@ -26,6 +26,20 @@ const createChart = ({ labels, datasets }) =>
         mode: "point",
         displayColors: true
       },
+      elements: {
+        line: {
+          tension: 0
+        }
+      },
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              precision: 0,
+            },
+          },
+        ],
+      },
       onClick(e, item) {
         if (item.length > 0) {
           const { _index } = item[0];
