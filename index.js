@@ -30,8 +30,7 @@ const initialState = {
   strategy: ["byDate", ""],
   currentCountry: "Italy",
   selectedCountries: ["China", "Italy"],
-  sortOrder: ["lastCases", "desc"],
-  alignToPatientZero: false
+  sortOrder: ["lastCases", "desc"]
 };
 
 app({

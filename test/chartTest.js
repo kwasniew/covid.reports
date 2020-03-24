@@ -68,8 +68,7 @@ test(
           { date: "2020-1-23", confirmed: 1 },
           { date: "2020-1-24", confirmed: 2 }
         ]
-      },
-      alignToPatientZero: true
+      }
     },
     {
       labels: ["1", "2"],
@@ -105,8 +104,7 @@ test(
           { date: "2020-1-23", confirmed: 1 },
           { date: "2020-1-24", confirmed: 2 }
         ]
-      },
-      alignToPatientZero: true
+      }
     },
     {
       labels: ["2", "3"],
