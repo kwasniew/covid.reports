@@ -1,148 +1,216 @@
 import test from "tape";
+import omit from "lodash.omit";
 import { toChartData } from "../chart.js";
 
-test("trim initial cases with zero", t => {
-  const state = {
-    selectedCountries: ["Country A", "Country B"],
-    reportType: "confirmed",
-    report: {
-      "Country A": [
-        { date: "2020-1-22", confirmed: 0, deaths: 0 },
-        { date: "2020-1-23", confirmed: 0, deaths: 0 },
-        { date: "2020-1-24", confirmed: 1, deaths: 0 }
-      ],
-      "Country B": [
-        { date: "2020-1-22", confirmed: 0, deaths: 0 },
-        { date: "2020-1-23", confirmed: 1, deaths: 0 },
-        { date: "2020-1-24", confirmed: 2, deaths: 1 }
+const cleanData = data =>
+  omit(data, ["backgroundColor", "pointBackgroundColor", "borderColor"]);
+const cleanChart = chartData => ({
+  ...chartData,
+  datasets: chartData.datasets.map(cleanData)
+});
+const assertStateToChart = (state, chartData) => t => {
+  t.deepEqual(cleanChart(toChartData(state)), cleanChart(chartData));
+
+  t.end();
+};
+
+test(
+  "trim initial cases with zero",
+  assertStateToChart(
+    {
+      selectedCountries: ["Country A", "Country B"],
+      reportType: "confirmed",
+      strategy: ["byDate", ""],
+      report: {
+        "Country A": [
+          { date: "2020-1-22", confirmed: 0 },
+          { date: "2020-1-23", confirmed: 0 },
+          { date: "2020-1-24", confirmed: 1 }
+        ],
+        "Country B": [
+          { date: "2020-1-22", confirmed: 0 },
+          { date: "2020-1-23", confirmed: 1 },
+          { date: "2020-1-24", confirmed: 2 }
+        ]
+      }
+    },
+    {
+      labels: ["2020-1-23", "2020-1-24"],
+      datasets: [
+        {
+          label: "Country A",
+          data: [0, 1]
+        },
+        {
+          label: "Country B",
+          data: [1, 2]
+        }
       ]
     }
-  };
-  const chartData = {
-    labels: ["2020-1-23", "2020-1-24"],
-    datasets: [
-      {
-        label: "Country A",
-        data: [0, 1],
-        backgroundColor: "rgba(28, 68, 87, 0.2)",
-        pointBackgroundColor: "rgba(28, 68, 87, 1)",
-        borderColor: "rgba(28, 68, 87, 1)"
+  )
+);
+
+test(
+  "align initial cases to patient zero",
+  assertStateToChart(
+    {
+      selectedCountries: ["Country A", "Country B"],
+      reportType: "confirmed",
+      strategy: ["byDay", ""],
+      report: {
+        "Country A": [
+          { date: "2020-1-22", confirmed: 0 },
+          { date: "2020-1-23", confirmed: 0 },
+          { date: "2020-1-24", confirmed: 1 }
+        ],
+        "Country B": [
+          { date: "2020-1-22", confirmed: 0 },
+          { date: "2020-1-23", confirmed: 1 },
+          { date: "2020-1-24", confirmed: 2 }
+        ]
       },
-      {
-        label: "Country B",
-        data: [1, 2],
-        backgroundColor: "rgba(160, 231, 59, 0.2)",
-        pointBackgroundColor: "rgba(160, 231, 59, 1)",
-        borderColor: "rgba(160, 231, 59, 1)"
-      }
-    ]
-  };
-
-  t.deepEqual(toChartData(state), chartData);
-
-  t.end();
-});
-
-test("no reported cases", t => {
-  const state = {
-    selectedCountries: ["Country A", "Country B"],
-    reportType: "confirmed",
-    report: {
-      "Country A": [
-        { date: "2020-1-22", confirmed: 0 },
-        { date: "2020-1-23", confirmed: 0 },
-        { date: "2020-1-24", confirmed: 0 }
-      ],
-      "Country B": [
-        { date: "2020-1-22", confirmed: 0 },
-        { date: "2020-1-23", confirmed: 0 },
-        { date: "2020-1-24", confirmed: 0 }
+      alignToPatientZero: true
+    },
+    {
+      labels: ["1", "2"],
+      datasets: [
+        {
+          label: "Country A",
+          data: [1]
+        },
+        {
+          label: "Country B",
+          data: [1, 2]
+        }
       ]
     }
-  };
-  const chartData = {
-    labels: [],
-    datasets: [
-      {
-        label: "Country A",
-        data: [],
-        backgroundColor: "rgba(28, 68, 87, 0.2)",
-        pointBackgroundColor: "rgba(28, 68, 87, 1)",
-        borderColor: "rgba(28, 68, 87, 1)"
+  )
+);
+
+test(
+  "align initial cases to patient zero from given day",
+  assertStateToChart(
+    {
+      selectedCountries: ["Country A", "Country B"],
+      reportType: "confirmed",
+      strategy: ["byDay", "2"],
+      report: {
+        "Country A": [
+          { date: "2020-1-22", confirmed: 1 },
+          { date: "2020-1-23", confirmed: 1 },
+          { date: "2020-1-24", confirmed: 2 }
+        ],
+        "Country B": [
+          { date: "2020-1-22", confirmed: 0 },
+          { date: "2020-1-23", confirmed: 1 },
+          { date: "2020-1-24", confirmed: 2 }
+        ]
       },
-      {
-        label: "Country B",
-        data: [],
-        backgroundColor: "rgba(160, 231, 59, 0.2)",
-        pointBackgroundColor: "rgba(160, 231, 59, 1)",
-        borderColor: "rgba(160, 231, 59, 1)"
-      }
-    ]
-  };
-
-  t.deepEqual(toChartData(state), chartData);
-
-  t.end();
-});
-
-test("no countries selected", t => {
-  const state = {
-    selectedCountries: [],
-    reportType: "confirmed",
-    report: {
-      "Country A": [{ date: "2020-1-22", confirmed: 0 }],
-      "Country B": [{ date: "2020-1-22", confirmed: 0 }]
-    }
-  };
-  const chartData = {
-    labels: [],
-    datasets: []
-  };
-
-  t.deepEqual(toChartData(state), chartData);
-
-  t.end();
-});
-
-test("from given date", t => {
-  const state = {
-    dateFrom: "2020-1-23",
-    selectedCountries: ["Country A", "Country B"],
-    reportType: "confirmed",
-    report: {
-      "Country A": [
-        { date: "2020-1-22", confirmed: 1 },
-        { date: "2020-1-23", confirmed: 2 },
-        { date: "2020-1-24", confirmed: 3 }
-      ],
-      "Country B": [
-        { date: "2020-1-22", confirmed: 3 },
-        { date: "2020-1-23", confirmed: 4 },
-        { date: "2020-1-24", confirmed: 5 }
+      alignToPatientZero: true
+    },
+    {
+      labels: ["2", "3"],
+      datasets: [
+        {
+          label: "Country A",
+          data: [1, 2]
+        },
+        {
+          label: "Country B",
+          data: [2]
+        }
       ]
     }
-  };
-  const chartData = {
-    labels: ["2020-1-23", "2020-1-24"],
-    datasets: [
-      {
-        label: "Country A",
-        data: [2, 3],
-        backgroundColor: "rgba(28, 68, 87, 0.2)",
-        pointBackgroundColor: "rgba(28, 68, 87, 1)",
-        borderColor: "rgba(28, 68, 87, 1)"
-      },
-      {
-        label: "Country B",
-        data: [4, 5],
-        backgroundColor: "rgba(160, 231, 59, 0.2)",
-        pointBackgroundColor: "rgba(160, 231, 59, 1)",
-        borderColor: "rgba(160, 231, 59, 1)"
+  )
+);
+
+test(
+  "no reported cases",
+  assertStateToChart(
+    {
+      selectedCountries: ["Country A", "Country B"],
+      reportType: "confirmed",
+      strategy: ["byDate", ""],
+      report: {
+        "Country A": [
+          { date: "2020-1-22", confirmed: 0 },
+          { date: "2020-1-23", confirmed: 0 },
+          { date: "2020-1-24", confirmed: 0 }
+        ],
+        "Country B": [
+          { date: "2020-1-22", confirmed: 0 },
+          { date: "2020-1-23", confirmed: 0 },
+          { date: "2020-1-24", confirmed: 0 }
+        ]
       }
-    ]
-  };
+    },
+    {
+      labels: [],
+      datasets: [
+        {
+          label: "Country A",
+          data: []
+        },
+        {
+          label: "Country B",
+          data: []
+        }
+      ]
+    }
+  )
+);
 
-  t.deepEqual(toChartData(state), chartData);
+test(
+  "no countries selected",
+  assertStateToChart(
+    {
+      selectedCountries: [],
+      reportType: "confirmed",
+      strategy: ["byDate", ""],
+      report: {
+        "Country A": [{ date: "2020-1-22", confirmed: 0 }],
+        "Country B": [{ date: "2020-1-22", confirmed: 0 }]
+      }
+    },
+    {
+      labels: [],
+      datasets: []
+    }
+  )
+);
 
-  t.end();
-});
+test(
+  "from given date",
+  assertStateToChart(
+    {
+      selectedCountries: ["Country A", "Country B"],
+      reportType: "confirmed",
+      strategy: ["byDate", "2020-1-23"],
+      report: {
+        "Country A": [
+          { date: "2020-1-22", confirmed: 1 },
+          { date: "2020-1-23", confirmed: 2 },
+          { date: "2020-1-24", confirmed: 3 }
+        ],
+        "Country B": [
+          { date: "2020-1-22", confirmed: 3 },
+          { date: "2020-1-23", confirmed: 4 },
+          { date: "2020-1-24", confirmed: 5 }
+        ]
+      }
+    },
+    {
+      labels: ["2020-1-23", "2020-1-24"],
+      datasets: [
+        {
+          label: "Country A",
+          data: [2, 3]
+        },
+        {
+          label: "Country B",
+          data: [4, 5]
+        }
+      ]
+    }
+  )
+);

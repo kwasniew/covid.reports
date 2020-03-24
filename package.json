@@ -1,12 +1,10 @@
 {
   "scripts": {
     "prebuild": "npm run snowpack",
-    "postinstall": "npm run snowpack",
     "build": "parcel build index.html",
     "test": "tape -r esm test/*Test.js | tap-diff",
     "snowpack": "snowpack --include '*.js'",
-    "format": "prettier --write '{.,test}/*.js'",
-    "prod": "npm run format && npm run test && npm run build"
+    "format": "prettier --write '{.,test}/*.js'"
   },
   "dependencies": {
     "@hyperapp/events": "0.0.4",
@@ -28,6 +26,7 @@
   },
   "devDependencies": {
     "esm": "3.2.25",
+    "lodash.omit": "4.5.0",
     "parcel": "1.12.4",
     "prettier": "1.19.1",
     "snowpack": "1.6.0",

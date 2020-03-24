@@ -14,7 +14,7 @@ const main = state => html`
   <${Container}>
       ${chips(state)} ${chartView} ${select(state)} ${worldMap(state)} 
       ${chips(state)}
-  </${Container}>
+  </Container>
 `;
 
 const view = state =>
@@ -27,9 +27,11 @@ const view = state =>
 const initialState = {
   report: {},
   reportType: "confirmed",
+  strategy: ["byDate", ""],
   currentCountry: "Italy",
   selectedCountries: ["China", "Italy"],
-  sortOrder: ["lastCases", "desc"]
+  sortOrder: ["lastCases", "desc"],
+  alignToPatientZero: false
 };
 
 app({

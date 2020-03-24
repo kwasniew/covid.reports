@@ -44,12 +44,15 @@ const ChartSubscription = action => [
   action
 ];
 
-const SetDateFrom = (state, dateFrom) => {
-  const newState = { ...state, dateFrom };
+const SetFromSelector = (state, from) => {
+  const newState = {
+    ...state,
+    strategy: [state.strategy[0], from]
+  };
   return [newState, [updateChart(newState)]];
 };
 
-export const ChartListen = ChartSubscription(SetDateFrom);
+export const ChartListen = ChartSubscription(SetFromSelector);
 
 const createOrUpdateChart = data => {
   if (chart) {
@@ -74,7 +77,11 @@ const toChartDataItem = ({ report, reportType }) => name => {
     : null;
 };
 
-const isZerosArray = cases => cases.every(x => x === 0);
+const isZero = x => x === 0;
+const isZerosArray = cases => cases.every(isZero);
+
+const mapDatasets = (f, datasets) =>
+  datasets.map((dataset, i) => ({ ...dataset, data: f(dataset.data, i) }));
 
 const trimLeadingData = datasets => {
   const daysWithCases = dropWhile(
@@ -84,10 +91,7 @@ const trimLeadingData = datasets => {
   const length = daysWithCases.length;
   const cleanData = unzip(daysWithCases);
 
-  const cleanDatasets = datasets.map((dataset, i) => ({
-    ...dataset,
-    data: cleanData[i] || []
-  }));
+  const cleanDatasets = mapDatasets((data, i) => cleanData[i] || [], datasets);
 
   return { cleanDatasets, length };
 };
@@ -102,41 +106,73 @@ const listLabels = ({ report, datasets }) => {
 const trimLeadingLabels = ({ report, datasets, length }) =>
   listLabels({ report, datasets }).slice(-length);
 
-const dateBasedStrategy = ({ report, datasets, dateFrom }) => {
+const fromGivenDateStrategy = ({ report, datasets, from }) => {
   const labels = dropWhile(
     listLabels({ report, datasets }),
-    label => label !== dateFrom
+    label => label !== from
   );
   const length = labels.length;
-  const trimmedDatasets = datasets.map(dataset => ({
-    ...dataset,
-    data: dataset.data.slice(-length)
-  }));
+  const trimmedDatasets = mapDatasets(data => data.slice(-length), datasets);
+
   return { labels, datasets: trimmedDatasets };
 };
 
-const fromPatientZeroStrategy = ({ report, datasets }) => {
+const fromFirstDateStrategy = ({ report, datasets }) => {
   const { cleanDatasets, length } = trimLeadingData(datasets);
   const labels = trimLeadingLabels({ report, datasets: cleanDatasets, length });
 
   return { labels, datasets: cleanDatasets };
 };
 
+const fromPatientZeroStrategy = ({ datasets, from }) => {
+  const trimmedDatasets = mapDatasets(
+    data => dropWhile(data, isZero),
+    datasets
+  );
+
+  const longestDatasetLength = trimmedDatasets.reduce((days, dataset) => {
+    return dataset.data.length > days ? dataset.data.length : days;
+  }, 0);
+
+  const toHumanDays = length =>
+    Array.from({ length }, (v, i) => (i + 1).toString());
+  const labels = toHumanDays(longestDatasetLength);
+
+  if (from) {
+    const initialDaystoTrim = Number(from) - 1;
+    return {
+      labels: labels.slice(initialDaystoTrim),
+      datasets: mapDatasets(
+        data => data.slice(initialDaystoTrim),
+        trimmedDatasets
+      )
+    };
+  }
+  console.log(trimmedDatasets);
+
+  return {
+    labels,
+    datasets: trimmedDatasets
+  };
+};
+
 export const toChartData = ({
   selectedCountries,
   reportType,
   report,
-  dateFrom
+  strategy: [strategy, from]
 }) => {
   const countryExists = x => x;
   const datasets = selectedCountries
     .map(toChartDataItem({ report, reportType }))
     .filter(countryExists);
 
-  if (dateFrom) {
-    return dateBasedStrategy({ report, datasets, dateFrom });
-  } else {
-    return fromPatientZeroStrategy({ report, datasets });
+  if (strategy === "byDay") {
+    return fromPatientZeroStrategy({ report, datasets, from });
+  } else if (strategy === "byDate" && from) {
+    return fromGivenDateStrategy({ report, datasets, from });
+  } else if (strategy === "byDate") {
+    return fromFirstDateStrategy({ report, datasets });
   }
 };
 
