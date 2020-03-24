@@ -148,7 +148,6 @@ const fromPatientZeroStrategy = ({ datasets, from }) => {
       )
     };
   }
-  console.log(trimmedDatasets);
 
   return {
     labels,

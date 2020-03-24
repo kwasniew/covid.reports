@@ -56,7 +56,6 @@ const byDate = () =>
   `;
 
 export const chips = state =>
-  console.log(state) ||
   html`
     <div class="m-2">
       ${strategyChip(state)}
