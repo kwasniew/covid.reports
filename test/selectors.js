@@ -1,5 +1,5 @@
 export const selectors = $ => {
-  const $class = name => expected => element => {
+  const $textIn = name => expected => element => {
     const actual = element.find(name).text();
     return { actual, expected };
   };
@@ -32,5 +32,5 @@ export const selectors = $ => {
     );
   };
 
-  return { $table, $row, $class };
+  return { $table, $row, $textIn };
 };
