@@ -35,10 +35,10 @@ const createChart = ({ labels, datasets }) =>
         yAxes: [
           {
             ticks: {
-              precision: 0,
-            },
-          },
-        ],
+              precision: 0
+            }
+          }
+        ]
       },
       onClick(e, item) {
         if (item.length > 0) {
