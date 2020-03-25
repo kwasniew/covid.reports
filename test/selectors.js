@@ -28,11 +28,7 @@ export const selectors = $ => {
 
   const $table = expected => {
     return splitResults(
-      Array.from(
-        $("table")
-          .find("tr")
-          .map((i, tr) => [expected[i]($(tr))])
-      )
+      Array.from($("table tr").map((i, tr) => [expected[i]($(tr))]))
     );
   };
 

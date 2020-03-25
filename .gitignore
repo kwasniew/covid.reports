@@ -3,4 +3,3 @@ web_modules
 dist
 .cache
 todo
-test/renderTest.js
