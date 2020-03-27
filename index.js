@@ -18,6 +18,7 @@ const main = state => html`
 `;
 
 const view = state =>
+  console.log(state) ||
   html`
     <div>
       ${header} ${tab(state)} ${main(state)} ${table(state)}
@@ -30,6 +31,7 @@ const initialState = {
   strategy: ["byDate", ""],
   currentCountry: "Italy",
   selectedCountries: ["China", "Italy"],
+  days: 7,
   sortOrder: ["lastCases", "desc"]
 };
 

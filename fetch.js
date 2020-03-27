@@ -5,7 +5,11 @@ import { request } from "./web_modules/@hyperapp/http.js";
 const GotReport = (state, report) => {
   const newState = {
     ...state,
-    report: addCustomStatsToReport({ report, reportType: state.reportType })
+    report: addCustomStatsToReport({
+      report,
+      reportType: state.reportType,
+      days: state.days
+    })
   };
   return [newState, [updateChart(newState)]];
 };

@@ -6,7 +6,11 @@ import { addCustomStatsToReport } from "./stats.js";
 import { updateChart } from "./chart.js";
 
 const ChangeReportType = reportType => state => {
-  const report = addCustomStatsToReport({ report: state.report, reportType });
+  const report = addCustomStatsToReport({
+    report: state.report,
+    reportType,
+    days: state.days
+  });
   const newState = {
     ...state,
     reportType,

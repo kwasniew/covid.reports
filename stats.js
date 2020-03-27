@@ -1,7 +1,7 @@
 import prop from "./web_modules/lodash.property.js";
 import mapValues from "./web_modules/lodash.mapvalues.js";
 
-const lastNDays = (dataPoints, days) => dataPoints.slice(-days);
+const lastNDays = (dataPoints, days) => dataPoints.slice(-(days + 1));
 
 export const calculateGrowth = (dataPoints, days) => {
   const lastDays = lastNDays(dataPoints, days);
@@ -27,7 +27,7 @@ const calculateCustomStats = ({ stats, reportType, days }) => {
   };
 };
 
-export const addCustomStatsToReport = ({ report, reportType, days = 7 }) => {
+export const addCustomStatsToReport = ({ report, reportType, days }) => {
   return mapValues(report, stats =>
     Object.assign(stats, calculateCustomStats({ stats, reportType, days }))
   );

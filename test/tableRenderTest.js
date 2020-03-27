@@ -21,9 +21,9 @@ test("render table", t => {
   const $chip = $textIn(".chip");
 
   const { actual, expected } = $table([
-    $row(["Country", "Weekly Growth Rate", "Total cases", "Last week cases ▼"]),
-    $row(["Italy", "200%", "80", "60"]),
-    $row([$chip("China"), "50%", "100", "10"])
+    $row(["Country", "Total cases", "Growth rate", "Last cases ▼"]),
+    $row(["Italy", "80", "200%", "60"]),
+    $row([$chip("China"), "100", "50%", "10"])
   ]);
   t.deepEqual(actual, expected, "table matches expected shape");
 
