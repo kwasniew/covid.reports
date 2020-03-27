@@ -90,7 +90,7 @@ const timeframeButton = (label, value, actual) =>
     <button
       onclick=${SetStatsDays(value)}
       class=${cc({
-        "btn-small": true,
+        "btn-sm": true,
         btn: true,
         "btn-primary": actual === value
       })}
