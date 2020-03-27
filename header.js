@@ -1,5 +1,9 @@
 import { html } from "./html.js";
 import { Container } from "./container.js";
+import { initialState } from "./state.js";
+import { fetchReport } from "./fetch.js";
+
+const ResetState = _ => [initialState, [fetchReport]];
 
 export const header = html`
   <${Container} class="bg-primary">
@@ -19,7 +23,7 @@ export const header = html`
           </section>
         </div>
         <div class="hero hero-sm">
-          <div class="hero-body columns">
+          <div onclick=${ResetState} class="c-hand hero-body columns">
             <div class="column col-auto">
               <figure
                 class="avatar avatar-xl badge"

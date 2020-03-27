@@ -9,6 +9,7 @@ import { table } from "./table.js";
 import { select } from "./select.js";
 import { chips } from "./chips.js";
 import { fetchReport } from "./fetch.js";
+import { initialState } from "./state.js";
 
 const main = state => html`
   <${Container}>
@@ -24,16 +25,6 @@ const view = state =>
       ${header} ${tab(state)} ${main(state)} ${table(state)}
     </div>
   `;
-
-const initialState = {
-  report: {},
-  reportType: "confirmed",
-  strategy: ["byDate", ""],
-  currentCountry: "Italy",
-  selectedCountries: ["China", "Italy"],
-  days: 7,
-  sortOrder: ["lastCases", "desc"]
-};
 
 app({
   init: [initialState, fetchReport, ChartListen],
