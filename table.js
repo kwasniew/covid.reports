@@ -112,8 +112,8 @@ export const table = state => html`
           <tr>
             ${tableHeader("name", "Country")(state)}
             ${tableHeader("totalCases", "Total cases")(state)}
+            ${tableHeader("lastCases", "Last cases")(state)}            
             ${tableHeader("growth", "Growth rate")(state)}
-            ${tableHeader("lastCases", "Last cases")(state)}
           </tr>
           ${sortReport(state).map(
             ({ name, growth, totalCases, lastCases }) => html`
@@ -124,8 +124,8 @@ export const table = state => html`
               >
                 <td>${chipOrName(name)(state)}</td>
                 <td>${totalCases}</td>
-                <td>${growth}%</td>
                 <td>${lastCases}</td>
+                <td>${growth}%</td>
               </tr>
             `
           )}
