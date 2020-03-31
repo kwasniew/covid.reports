@@ -45,7 +45,7 @@ export const countryHighlight = state => country => {
 
 export const countryChip = name => state => html`
   <span
-    class="chip"
+    class="chip c-hand"
     onclick=${countryAction(state)(name)}
     style=${countryHighlight(state)(name)}
   >

@@ -92,6 +92,7 @@ const toChartDataItem = ({ report, reportType }) => name => {
 };
 
 const isZero = x => x === 0;
+const isLowerOrEq = n => x => x <= n;
 const isZerosArray = cases => cases.every(isZero);
 
 const mapDatasets = (f, datasets) =>
@@ -138,9 +139,9 @@ const fromFirstDateStrategy = ({ report, datasets }) => {
   return { labels, datasets: cleanDatasets };
 };
 
-const fromPatientZeroStrategy = ({ datasets, from }) => {
+const fromPatientNStrategy = ({ datasets, from, n }) => {
   const trimmedDatasets = mapDatasets(
-    data => dropWhile(data, isZero),
+    data => dropWhile(data, isLowerOrEq(n)),
     datasets
   );
 
@@ -180,8 +181,8 @@ export const toChartData = ({
     .map(toChartDataItem({ report, reportType }))
     .filter(countryExists);
 
-  if (strategy === "byDay") {
-    return fromPatientZeroStrategy({ report, datasets, from });
+  if (strategy[0] === "fromPatient") {
+    return fromPatientNStrategy({ datasets, from, n: strategy[1] });
   } else if (strategy === "byDate" && from) {
     return fromGivenDateStrategy({ report, datasets, from });
   } else if (strategy === "byDate") {

@@ -56,7 +56,7 @@ test(
     {
       selectedCountries: ["Country A", "Country B"],
       reportType: "confirmed",
-      strategy: ["byDay", ""],
+      strategy: [["fromPatient", 0], ""],
       report: {
         "Country A": [
           { date: "2020-1-22", confirmed: 0 },
@@ -92,7 +92,7 @@ test(
     {
       selectedCountries: ["Country A", "Country B"],
       reportType: "confirmed",
-      strategy: ["byDay", "2"],
+      strategy: [["fromPatient", 0], "2"],
       report: {
         "Country A": [
           { date: "2020-1-22", confirmed: 1 },
