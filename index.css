@@ -8,6 +8,6 @@ path:hover{
 }
 
 .chip-input {
-    border-radius: 0;
+    border: none;
 }
 
