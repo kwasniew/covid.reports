@@ -1,5 +1,6 @@
 path:hover{
     fill-opacity: 0.7;
+    cursor: pointer;
 }
 
 .column-center {
