@@ -10,6 +10,7 @@ import { select } from "./select.js";
 import { chips } from "./chips.js";
 import { fetchReport } from "./fetch.js";
 import { initialState } from "./state.js";
+import { LoadPreferences, SavePreferencesListen } from "./preferences.js";
 
 const main = state => html`
   <${Container}>
@@ -27,7 +28,13 @@ const view = state =>
   `;
 
 app({
-  init: [initialState, fetchReport, ChartListen],
+  init: [
+    initialState,
+    fetchReport,
+    ChartListen,
+    LoadPreferences,
+    SavePreferencesListen
+  ],
   view,
   node: document.getElementById("app")
 });

@@ -14,6 +14,7 @@
     "classcat": "4.0.2",
     "htm": "3.0.3",
     "hyperapp": "2.0.4",
+    "hyperapp-fx": "2.0.0-beta.1",
     "lodash.dropwhile": "4.6.0",
     "lodash.mapvalues": "4.6.0",
     "lodash.matches": "4.6.0",
