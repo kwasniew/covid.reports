@@ -6,3 +6,8 @@ path:hover{
 .column-center {
     align-self: center;
 }
+
+.chip-input {
+    border-radius: 0;
+}
+

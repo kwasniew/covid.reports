@@ -72,6 +72,7 @@ const patientNumber = n =>
   html`
     <span class="chip">
       <input
+        class="chip-input"
         onchange=${[SetFromPatient, targetValue]}
         type="number"
         min="0"
