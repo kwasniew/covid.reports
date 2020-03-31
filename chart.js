@@ -5,6 +5,7 @@ import zip from "./web_modules/lodash.zip.js";
 import unzip from "./web_modules/lodash.unzip.js";
 import prop from "./web_modules/lodash.property.js";
 import { html } from "./html.js";
+import { Strategies } from "./state.js";
 
 let chart;
 const updateChartData = data => {
@@ -181,11 +182,11 @@ export const toChartData = ({
     .map(toChartDataItem({ report, reportType }))
     .filter(countryExists);
 
-  if (strategy[0] === "fromPatient") {
+  if (strategy[0] === Strategies.FROM_PATIENT) {
     return fromPatientNStrategy({ datasets, from, n: strategy[1] });
-  } else if (strategy === "byDate" && from) {
+  } else if (strategy === Strategies.BY_DATE && from) {
     return fromGivenDateStrategy({ report, datasets, from });
-  } else if (strategy === "byDate") {
+  } else if (strategy === Strategies.BY_DATE) {
     return fromFirstDateStrategy({ report, datasets });
   }
 };

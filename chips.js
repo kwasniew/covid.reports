@@ -2,8 +2,9 @@ import { html } from "./html.js";
 import { countryChip } from "./country.js";
 import { updateChart } from "./chart.js";
 import { targetValue } from "./web_modules/@hyperapp/events.js";
+import { defaultByDate, defaultFromPatient, Strategies } from "./state.js";
 
-const RemoveFromSelector = state => {
+export const RemoveFromSelector = state => {
   const newState = {
     ...state,
     strategy: [state.strategy[0], ""]
@@ -11,16 +12,22 @@ const RemoveFromSelector = state => {
   return [newState, [updateChart(newState)]];
 };
 
-const ChangeStrategy = by => state => {
-  const newState = { ...state, strategy: [by, ""] };
+export const ChangeStrategy = by => state => {
+  const newState = { ...state, strategy: by };
   return [newState, [updateChart(newState)]];
 };
 
-const SetFromPatient = (state, patient) => {
+export const SetFromPatient = (state, patient) => {
+  if (!Array.isArray(state.strategy[0])) {
+    return state;
+  }
   const newState = {
     ...state
   };
-  newState.strategy[0][1] = Math.min(999999, Math.max(0, Number(patient)));
+  const within = (min, max) => n =>
+    Math.min(max, Math.max(min, Number(patient)));
+
+  newState.strategy[0][1] = within(0, 99999)(Number(patient));
   return [newState, updateChart(newState)];
 };
 
@@ -40,7 +47,7 @@ const fromChip = value =>
     : "";
 
 const strategyChip = ({ strategy: [name, from] }) => {
-  const strategy = name === "byDate" ? byDate : fromPatient;
+  const strategy = name === Strategies.BY_DATE ? byDate : fromPatient;
   return html`
     <span>
       ${strategy(name[1])} ${fromChip(from)}
@@ -50,7 +57,11 @@ const strategyChip = ({ strategy: [name, from] }) => {
 
 const fromPatient = n =>
   html`
-    <span key="patient" class="chip c-hand" onclick=${ChangeStrategy("byDate")}>
+    <span
+      key="patient"
+      class="chip c-hand"
+      onclick=${ChangeStrategy(defaultByDate)}
+    >
       ${"From Patient"}
       <span class="btn btn-clear" href="#" role="button"></span>
     </span>
@@ -75,7 +86,7 @@ const byDate = () =>
     <span
       key="date"
       class="chip c-hand"
-      onclick=${ChangeStrategy(["fromPatient", 100])}
+      onclick=${ChangeStrategy(defaultFromPatient)}
     >
       By Date
       <span class="btn btn-clear" href="#" role="button"></span>
