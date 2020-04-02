@@ -10,7 +10,7 @@ import { select } from "./select.js";
 import { chips } from "./chips.js";
 import { fetchReport } from "./fetch.js";
 import { initialState } from "./state.js";
-import { LoadPreferences, SavePreferencesListen } from "./preferences.js";
+import { LoadPreferences, SavePreferencesListen, CleanPreferencesOnErrorListen } from "./preferences.js";
 import { HistoryListen, ReadStateFromUrl } from "./history.js";
 
 const main = state => html`
@@ -27,15 +27,10 @@ const view = state =>
     </div>
   `;
 
-window.onerror = function(errorMsg, url, lineNumber) {
-  console.log(errorMsg, url, lineNumber);
-  localStorage.clear();
-  return false;
-};
-
 app({
   init: [
     initialState,
+    CleanPreferencesOnErrorListen,
     LoadPreferences,
     fetchReport,
     ChartListen,
