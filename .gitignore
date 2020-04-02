@@ -3,3 +3,4 @@ web_modules
 dist
 .cache
 todo
+.parcel-cache
