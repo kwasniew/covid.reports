@@ -6,6 +6,7 @@ import unzip from "./web_modules/lodash.unzip.js";
 import prop from "./web_modules/lodash.property.js";
 import { html } from "./html.js";
 import { Strategies } from "./state.js";
+import { update } from "./update.js";
 
 let chart;
 const updateChartData = data => {
@@ -59,13 +60,11 @@ const ChartSubscription = action => [
   action
 ];
 
-const SetFromSelector = (state, from) => {
-  const newState = {
+const SetFromSelector = (state, from) =>
+  update({
     ...state,
     strategy: [state.strategy[0], from]
-  };
-  return [newState, [updateChart(newState)]];
-};
+  });
 
 export const ChartListen = ChartSubscription(SetFromSelector);
 

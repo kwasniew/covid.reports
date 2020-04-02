@@ -1,24 +1,20 @@
-import { updateChart } from "./chart.js";
 import { stringToHex } from "./stringToColor.js";
 import { html } from "./html.js";
+import { update } from "./update.js";
 
 const unique = list => [...new Set(list)];
-export const AddCountry = currentCountry => state => {
-  const newState = {
+export const AddCountry = currentCountry => state =>
+  update({
     ...state,
     currentCountry,
     selectedCountries: unique([...state.selectedCountries, currentCountry])
-  };
-  return [newState, [updateChart(newState)]];
-};
+  });
 
-export const RemoveCountry = country => state => {
-  const newState = {
+export const RemoveCountry = country => state =>
+  update({
     ...state,
     selectedCountries: state.selectedCountries.filter(c => c !== country)
-  };
-  return [newState, [updateChart(newState)]];
-};
+  });
 
 export const isActive = ({ selectedCountries }) => country =>
   selectedCountries.includes(country);

@@ -3,19 +3,15 @@ import { countryChip } from "./country.js";
 import { updateChart } from "./chart.js";
 import { targetValue } from "./web_modules/@hyperapp/events.js";
 import { defaultByDate, defaultFromPatient, Strategies } from "./state.js";
+import { update } from "./update.js";
 
-export const RemoveFromSelector = state => {
-  const newState = {
+export const RemoveFromSelector = state =>
+  update({
     ...state,
     strategy: [state.strategy[0], ""]
-  };
-  return [newState, [updateChart(newState)]];
-};
+  });
 
-export const ChangeStrategy = by => state => {
-  const newState = { ...state, strategy: by };
-  return [newState, [updateChart(newState)]];
-};
+export const ChangeStrategy = by => state => update({ ...state, strategy: by });
 
 export const SetFromPatient = (state, patient) => {
   if (!Array.isArray(state.strategy[0])) {
@@ -28,7 +24,7 @@ export const SetFromPatient = (state, patient) => {
     Math.min(max, Math.max(min, Number(patient)));
 
   newState.strategy[0][1] = within(0, 99999)(Number(patient));
-  return [newState, updateChart(newState)];
+  return update(newState);
 };
 
 const fromChip = value =>

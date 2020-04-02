@@ -3,7 +3,7 @@ import { Container } from "./container.js";
 import cc from "./web_modules/classcat.js";
 import { preventDefault } from "./web_modules/@hyperapp/events.js";
 import { addCustomStatsToReport } from "./stats.js";
-import { updateChart } from "./chart.js";
+import { update } from "./update.js";
 
 const ChangeReportType = reportType => state => {
   const report = addCustomStatsToReport({
@@ -11,13 +11,12 @@ const ChangeReportType = reportType => state => {
     reportType,
     days: state.days
   });
-  const newState = {
+  return update({
     ...state,
     reportType,
     report,
     sortOrder: ["lastCases", "desc"]
-  };
-  return [newState, [updateChart(newState)]];
+  });
 };
 
 export const tab = ({ reportType }) => html`
