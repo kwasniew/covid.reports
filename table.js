@@ -45,7 +45,7 @@ export const SortBy = newSortBy => state => {
 
 const tableHeader = (name, text) => state => {
   return html`
-    <th class="c-hand" onclick=${SortBy(name)}>
+    <th class="c-hand bg-gray" onclick=${SortBy(name)}>
       <span>${text} ${sortIcon(name)(state)}</span>
     </th>
   `;
@@ -109,7 +109,7 @@ export const table = state => html`
   <${Container} class="bg-gray">
   <div class="">${timeFrameSwitch(state)}</div>
         <table class="table">
-          <tr>
+          <tr class="sticky-header">
             ${tableHeader("name", "Country")(state)}
             ${tableHeader("totalCases", "Total cases")(state)}
             ${tableHeader("lastCases", "Last cases")(state)}            
