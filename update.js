@@ -5,3 +5,9 @@ export const update = state => [
   state,
   [UpdateChart(state), UpdateHistory(state)]
 ];
+
+
+export const updateWithoutHistory = state => [
+  state,
+  [UpdateChart(state)]
+];
