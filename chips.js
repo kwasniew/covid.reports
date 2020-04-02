@@ -1,6 +1,5 @@
 import { html } from "./html.js";
 import { countryChip } from "./country.js";
-import { updateChart } from "./chart.js";
 import { targetValue } from "./web_modules/@hyperapp/events.js";
 import { defaultByDate, defaultFromPatient, Strategies } from "./state.js";
 import { update } from "./update.js";

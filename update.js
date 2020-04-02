@@ -1,3 +1,7 @@
-import { updateChart } from "./chart.js";
+import { UpdateChart } from "./chart.js";
+import { UpdateHistory } from "./history.js";
 
-export const update = state => [state, [updateChart(state)]];
+export const update = state => [
+  state,
+  [UpdateChart(state), UpdateHistory(state)]
+];

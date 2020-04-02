@@ -11,6 +11,7 @@ import { chips } from "./chips.js";
 import { fetchReport } from "./fetch.js";
 import { initialState } from "./state.js";
 import { LoadPreferences, SavePreferencesListen } from "./preferences.js";
+import { HistoryListen, ReadStateFromUrl } from "./history.js";
 
 const main = state => html`
   <${Container}>
@@ -20,20 +21,27 @@ const main = state => html`
 `;
 
 const view = state =>
-  console.log(state) ||
   html`
     <div>
       ${header} ${tab(state)} ${main(state)} ${table(state)}
     </div>
   `;
 
+window.onerror = function(errorMsg, url, lineNumber) {
+  console.log(errorMsg, url, lineNumber);
+  localStorage.clear();
+  return false;
+};
+
 app({
   init: [
     initialState,
+    LoadPreferences,
     fetchReport,
     ChartListen,
-    LoadPreferences,
-    SavePreferencesListen
+    ReadStateFromUrl,
+    SavePreferencesListen,
+    HistoryListen
   ],
   view,
   node: document.getElementById("app")

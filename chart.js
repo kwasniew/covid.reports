@@ -190,7 +190,7 @@ export const toChartData = ({
   }
 };
 
-export const updateChart = state => [
+export const UpdateChart = state => [
   () => {
     createOrUpdateChart(toChartData(state));
   }
