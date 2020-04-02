@@ -17,5 +17,5 @@ const stateWithLargeArray = { x: [...Array(100).keys()] };
 
 test(
   "convert state to url and back",
-  assertConvert([initialState, stateWithLargeArray])
+  assertConvert([initialState, stateWithLargeArray, "", {}])
 );

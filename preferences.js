@@ -1,9 +1,14 @@
-import { ReadFromStorage, WriteToStorage, RemoveFromStorage } from "./web_modules/hyperapp-fx.js";
+import {
+  ReadFromStorage,
+  WriteToStorage,
+  RemoveFromStorage
+} from "./web_modules/hyperapp-fx.js";
+import { action } from "./update.js";
 
 const key = "covid.reports";
 const SavePreferences = ({ report, ...preferences }) =>
-  WriteToStorage({ key, value: preferences });
-const ClearPreferences = RemoveFromStorage({key});
+  action(WriteToStorage({ key, value: preferences }));
+const ClearPreferences = action(RemoveFromStorage({ key }));
 const SetPreferences = (state, { value }) =>
   value ? { ...state, ...value } : state;
 export const LoadPreferences = ReadFromStorage({
@@ -24,5 +29,7 @@ const Listen = (element, event) => props => [
 const WindowUnloadListen = Listen(window, "unload");
 const WindowErrorListen = Listen(window, "error");
 
-export const CleanPreferencesOnErrorListen = WindowErrorListen(ClearPreferences);
+export const CleanPreferencesOnErrorListen = WindowErrorListen(
+  ClearPreferences
+);
 export const SavePreferencesListen = WindowUnloadListen(SavePreferences);

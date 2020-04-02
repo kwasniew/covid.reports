@@ -10,8 +10,13 @@ import { select } from "./select.js";
 import { chips } from "./chips.js";
 import { fetchReport } from "./fetch.js";
 import { initialState } from "./state.js";
-import { LoadPreferences, SavePreferencesListen, CleanPreferencesOnErrorListen } from "./preferences.js";
+import {
+  LoadPreferences,
+  SavePreferencesListen,
+  CleanPreferencesOnErrorListen
+} from "./preferences.js";
 import { HistoryListen, ReadStateFromUrl } from "./history.js";
+// import logger from "./web_modules/hyperapp-v2-basiclogger.js";
 
 const main = state => html`
   <${Container}>
@@ -39,5 +44,6 @@ app({
     HistoryListen
   ],
   view,
+  // middleware: logger,
   node: document.getElementById("app")
 });
