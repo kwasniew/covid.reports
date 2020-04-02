@@ -35,7 +35,7 @@ const view = state =>
 app({
   init: [
     initialState,
-    CleanPreferencesOnErrorListen,
+    // CleanPreferencesOnErrorListen,
     LoadPreferences,
     fetchReport,
     ChartListen,
