@@ -69,16 +69,16 @@ const valueStrategyChip = ({ valueStrategy }) => {
   `;
 };
 
+const staticChip = (label, action) => () => html`
+  <span class="chip c-hand" onclick=${action}>
+    ${label}
+    <span class="btn btn-clear" href="#" role="button"></span>
+  </span>
+`;
+
 const fromPatient = n =>
   html`
-    <span
-      key="patient"
-      class="chip c-hand"
-      onclick=${ChangeLabelStrategy(defaultByDate)}
-    >
-      ${"From Patient"}
-      <span class="btn btn-clear" href="#" role="button"></span>
-    </span>
+    ${staticChip("From Patient", ChangeLabelStrategy(defaultByDate))()}
     ${patientNumber(n)}
   `;
 
@@ -96,41 +96,15 @@ const patientNumber = n =>
     </span>
   `;
 
-const byDate = () =>
-  html`
-    <span
-      key="date"
-      class="chip c-hand"
-      onclick=${ChangeLabelStrategy(defaultFromPatient)}
-    >
-      By Date
-      <span class="btn btn-clear" href="#" role="button"></span>
-    </span>
-  `;
-
-const total = () =>
-  html`
-    <span
-      key="date"
-      class="chip c-hand"
-      onclick=${ChangeValueStrategy(ValueStrategies.INCREASE)}
-    >
-      Total
-      <span class="btn btn-clear" href="#" role="button"></span>
-    </span>
-  `;
-
-const increase = () =>
-  html`
-    <span
-      key="date"
-      class="chip c-hand"
-      onclick=${ChangeValueStrategy(ValueStrategies.TOTAL)}
-    >
-      Increase
-      <span class="btn btn-clear" href="#" role="button"></span>
-    </span>
-  `;
+const byDate = staticChip("By Date", ChangeLabelStrategy(defaultFromPatient));
+const total = staticChip(
+  "Total",
+  ChangeValueStrategy(ValueStrategies.INCREASE)
+);
+const increase = staticChip(
+  "Increase",
+  ChangeValueStrategy(ValueStrategies.TOTAL)
+);
 
 export const chips = state =>
   html`
