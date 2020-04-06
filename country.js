@@ -54,3 +54,12 @@ export const countryChip = name => state => html`
     ></span>
   </span>
 `;
+
+export const countryChips = state =>
+  html`
+    <div class="m-2">
+      ${Array.from(state.selectedCountries).map(name =>
+        countryChip(name)(state)
+      )}
+    </div>
+  `;

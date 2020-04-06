@@ -7,7 +7,7 @@ import { header } from "./header.js";
 import { tab } from "./tab.js";
 import { table } from "./table.js";
 import { select } from "./select.js";
-import { chips } from "./chips.js";
+import { countryChips } from "./country.js";
 import { fetchReport } from "./fetch.js";
 import { initialState } from "./state.js";
 import {
@@ -20,8 +20,10 @@ import { HistoryListen, ReadStateFromUrl } from "./history.js";
 
 const main = state => html`
   <${Container}>
-      ${chips(state)} ${chartView(state)} ${select(state)} ${worldMap(state)} 
-      ${chips(state)}
+      ${countryChips(state)} ${chartView(state)} ${select(state)} ${worldMap(
+  state
+)} 
+      ${countryChips(state)}
   </Container>
 `;
 
