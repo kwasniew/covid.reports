@@ -5,7 +5,7 @@ import zip from "./web_modules/lodash.zip.js";
 import unzip from "./web_modules/lodash.unzip.js";
 import prop from "./web_modules/lodash.property.js";
 import { html } from "./html.js";
-import { Strategies } from "./state.js";
+import { LabelStrategies } from "./state.js";
 import { update } from "./update.js";
 
 let chart;
@@ -63,7 +63,7 @@ const ChartSubscription = action => [
 const SetFromSelector = (state, from) =>
   update({
     ...state,
-    strategy: [state.strategy[0], from]
+    labelStrategy: [state.labelStrategy[0], from]
   });
 
 export const ChartListen = ChartSubscription(SetFromSelector);
@@ -174,18 +174,18 @@ export const toChartData = ({
   selectedCountries,
   reportType,
   report,
-  strategy: [strategy, from]
+  labelStrategy: [strategy, from]
 }) => {
   const countryExists = x => x;
   const datasets = selectedCountries
     .map(toChartDataItem({ report, reportType }))
     .filter(countryExists);
 
-  if (strategy[0] === Strategies.FROM_PATIENT) {
+  if (strategy[0] === LabelStrategies.FROM_PATIENT) {
     return fromPatientNStrategy({ datasets, from, n: strategy[1] });
-  } else if (strategy === Strategies.BY_DATE && from) {
+  } else if (strategy === LabelStrategies.BY_DATE && from) {
     return fromGivenDateStrategy({ report, datasets, from });
-  } else if (strategy === Strategies.BY_DATE) {
+  } else if (strategy === LabelStrategies.BY_DATE) {
     return fromFirstDateStrategy({ report, datasets });
   }
 };

@@ -1,7 +1,7 @@
 import test from "tape";
 import omit from "lodash.omit";
 import { toChartData } from "../chart.js";
-import { defaultByDate, Strategies } from "../state.js";
+import { defaultByDate, LabelStrategies } from "../state.js";
 
 const cleanData = data =>
   omit(data, ["backgroundColor", "pointBackgroundColor", "borderColor"]);
@@ -21,7 +21,7 @@ test(
     {
       selectedCountries: ["Country A", "Country B"],
       reportType: "confirmed",
-      strategy: defaultByDate,
+      labelStrategy: defaultByDate,
       report: {
         "Country A": [
           { date: "2020-1-22", confirmed: 0 },
@@ -57,7 +57,7 @@ test(
     {
       selectedCountries: ["Country A", "Country B"],
       reportType: "confirmed",
-      strategy: [[Strategies.FROM_PATIENT, 0], ""],
+      labelStrategy: [[LabelStrategies.FROM_PATIENT, 0], ""],
       report: {
         "Country A": [
           { date: "2020-1-22", confirmed: 0 },
@@ -93,7 +93,7 @@ test(
     {
       selectedCountries: ["Country A", "Country B"],
       reportType: "confirmed",
-      strategy: [[Strategies.FROM_PATIENT, 0], "2"],
+      labelStrategy: [[LabelStrategies.FROM_PATIENT, 0], "2"],
       report: {
         "Country A": [
           { date: "2020-1-22", confirmed: 1 },
@@ -129,7 +129,7 @@ test(
     {
       selectedCountries: ["Country A", "Country B"],
       reportType: "confirmed",
-      strategy: defaultByDate,
+      labelStrategy: defaultByDate,
       report: {
         "Country A": [
           { date: "2020-1-22", confirmed: 0 },
@@ -165,7 +165,7 @@ test(
     {
       selectedCountries: [],
       reportType: "confirmed",
-      strategy: defaultByDate,
+      labelStrategy: defaultByDate,
       report: {
         "Country A": [{ date: "2020-1-22", confirmed: 0 }],
         "Country B": [{ date: "2020-1-22", confirmed: 0 }]
@@ -184,7 +184,7 @@ test(
     {
       selectedCountries: ["Country A", "Country B"],
       reportType: "confirmed",
-      strategy: ["byDate", "2020-1-23"],
+      labelStrategy: ["byDate", "2020-1-23"],
       report: {
         "Country A": [
           { date: "2020-1-22", confirmed: 1 },

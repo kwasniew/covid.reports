@@ -1,19 +1,20 @@
 import { html } from "./html.js";
 import { countryChip } from "./country.js";
 import { targetValue } from "./web_modules/@hyperapp/events.js";
-import { defaultByDate, defaultFromPatient, Strategies } from "./state.js";
+import { defaultByDate, defaultFromPatient, LabelStrategies } from "./state.js";
 import { update } from "./update.js";
 
 export const RemoveFromSelector = state =>
   update({
     ...state,
-    strategy: [state.strategy[0], ""]
+    labelStrategy: [state.labelStrategy[0], ""]
   });
 
-export const ChangeStrategy = by => state => update({ ...state, strategy: by });
+export const ChangeStrategy = by => state =>
+  update({ ...state, labelStrategy: by });
 
 export const SetFromPatient = (state, patient) => {
-  if (!Array.isArray(state.strategy[0])) {
+  if (!Array.isArray(state.labelStrategy[0])) {
     return state;
   }
   const newState = {
@@ -22,7 +23,7 @@ export const SetFromPatient = (state, patient) => {
   const within = (min, max) => n =>
     Math.min(max, Math.max(min, Number(patient)));
 
-  newState.strategy[0][1] = within(0, 99999)(Number(patient));
+  newState.labelStrategy[0][1] = within(0, 99999)(Number(patient));
   return update(newState);
 };
 
@@ -41,8 +42,8 @@ const fromChip = value =>
       `
     : "";
 
-const strategyChip = ({ strategy: [name, from] }) => {
-  const strategy = name === Strategies.BY_DATE ? byDate : fromPatient;
+const labelStrategyChip = ({ labelStrategy: [name, from] }) => {
+  const strategy = name === LabelStrategies.BY_DATE ? byDate : fromPatient;
   return html`
     <span>
       ${strategy(name[1])} ${fromChip(from)}
@@ -92,7 +93,7 @@ const byDate = () =>
 export const chips = state =>
   html`
     <div class="m-2">
-      ${strategyChip(state)}
+      ${labelStrategyChip(state)}
       ${Array.from(state.selectedCountries).map(name =>
         countryChip(name)(state)
       )}
