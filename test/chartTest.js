@@ -1,7 +1,7 @@
 import test from "tape";
 import omit from "lodash.omit";
 import { toChartData } from "../chart.js";
-import { defaultByDate, LabelStrategies } from "../state.js";
+import { defaultByDate, LabelStrategies, ValueStrategies } from "../state.js";
 
 const cleanData = data =>
   omit(data, ["backgroundColor", "pointBackgroundColor", "borderColor"]);
@@ -45,6 +45,43 @@ test(
         {
           label: "Country B",
           data: [1, 2]
+        }
+      ]
+    }
+  )
+);
+
+test(
+  "increase value strategy",
+  assertStateToChart(
+    {
+      selectedCountries: ["Country A", "Country B"],
+      reportType: "confirmed",
+      labelStrategy: defaultByDate,
+      valueStrategy: ValueStrategies.INCREASE,
+      report: {
+        "Country A": [
+          { date: "2020-1-22", confirmed: 0 },
+          { date: "2020-1-23", confirmed: 0 },
+          { date: "2020-1-24", confirmed: 1 }
+        ],
+        "Country B": [
+          { date: "2020-1-22", confirmed: 0 },
+          { date: "2020-1-23", confirmed: 1 },
+          { date: "2020-1-24", confirmed: 2 }
+        ]
+      }
+    },
+    {
+      labels: ["2020-1-23", "2020-1-24"],
+      datasets: [
+        {
+          label: "Country A",
+          data: [0, 1]
+        },
+        {
+          label: "Country B",
+          data: [1, 1]
         }
       ]
     }

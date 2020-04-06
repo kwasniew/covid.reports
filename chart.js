@@ -5,7 +5,7 @@ import zip from "./web_modules/lodash.zip.js";
 import unzip from "./web_modules/lodash.unzip.js";
 import prop from "./web_modules/lodash.property.js";
 import { html } from "./html.js";
-import { LabelStrategies } from "./state.js";
+import { LabelStrategies, ValueStrategies } from "./state.js";
 import { update } from "./update.js";
 
 let chart;
@@ -170,16 +170,27 @@ const fromPatientNStrategy = ({ datasets, from, n }) => {
   };
 };
 
+const toIncrease = (value, index, array) =>
+  index > 0 ? value - array[index - 1] : value;
+const increaseDatasets = totalDatasets =>
+  mapDatasets(data => data.map(toIncrease), totalDatasets);
+
 export const toChartData = ({
   selectedCountries,
   reportType,
   report,
-  labelStrategy: [strategy, from]
+  labelStrategy: [strategy, from],
+  valueStrategy
 }) => {
   const countryExists = x => x;
-  const datasets = selectedCountries
+  const totalDatasets = selectedCountries
     .map(toChartDataItem({ report, reportType }))
     .filter(countryExists);
+
+  const datasets =
+    valueStrategy === ValueStrategies.INCREASE
+      ? increaseDatasets(totalDatasets)
+      : totalDatasets;
 
   if (strategy[0] === LabelStrategies.FROM_PATIENT) {
     return fromPatientNStrategy({ datasets, from, n: strategy[1] });

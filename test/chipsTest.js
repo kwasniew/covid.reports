@@ -1,7 +1,7 @@
 import test from "tape";
 import {
   RemoveFromSelector,
-  ChangeStrategy,
+  ChangeLabelStrategy,
   SetFromPatient
 } from "../chips.js";
 import {
@@ -15,7 +15,7 @@ test("change strategy to fromPatient", t => {
     labelStrategy: [LabelStrategies.BY_DATE, "2012-10-3"]
   };
 
-  const [newState] = ChangeStrategy(defaultFromPatient)(oldState);
+  const [newState] = ChangeLabelStrategy(defaultFromPatient)(oldState);
 
   t.deepEqual(newState, {
     labelStrategy: [[LabelStrategies.FROM_PATIENT, 100], ""]
@@ -29,7 +29,7 @@ test("change strategy to byDate", t => {
     labelStrategy: [["fromPatient", 100], "15"]
   };
 
-  const [newState] = ChangeStrategy(defaultByDate)(oldState);
+  const [newState] = ChangeLabelStrategy(defaultByDate)(oldState);
 
   t.deepEqual(newState, { labelStrategy: [LabelStrategies.BY_DATE, ""] });
 

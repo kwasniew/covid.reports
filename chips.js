@@ -1,7 +1,12 @@
 import { html } from "./html.js";
 import { countryChip } from "./country.js";
 import { targetValue } from "./web_modules/@hyperapp/events.js";
-import { defaultByDate, defaultFromPatient, LabelStrategies } from "./state.js";
+import {
+  defaultByDate,
+  defaultFromPatient,
+  LabelStrategies,
+  ValueStrategies
+} from "./state.js";
 import { update } from "./update.js";
 
 export const RemoveFromSelector = state =>
@@ -10,8 +15,11 @@ export const RemoveFromSelector = state =>
     labelStrategy: [state.labelStrategy[0], ""]
   });
 
-export const ChangeStrategy = by => state =>
+export const ChangeLabelStrategy = by => state =>
   update({ ...state, labelStrategy: by });
+
+export const ChangeValueStrategy = valueStrategy => state =>
+  update({ ...state, valueStrategy });
 
 export const SetFromPatient = (state, patient) => {
   if (!Array.isArray(state.labelStrategy[0])) {
@@ -51,12 +59,22 @@ const labelStrategyChip = ({ labelStrategy: [name, from] }) => {
   `;
 };
 
+const valueStrategyChip = ({ valueStrategy }) => {
+  const strategy =
+    valueStrategy === ValueStrategies.INCREASE ? increase : total;
+  return html`
+    <span>
+      ${strategy()}
+    </span>
+  `;
+};
+
 const fromPatient = n =>
   html`
     <span
       key="patient"
       class="chip c-hand"
-      onclick=${ChangeStrategy(defaultByDate)}
+      onclick=${ChangeLabelStrategy(defaultByDate)}
     >
       ${"From Patient"}
       <span class="btn btn-clear" href="#" role="button"></span>
@@ -83,9 +101,33 @@ const byDate = () =>
     <span
       key="date"
       class="chip c-hand"
-      onclick=${ChangeStrategy(defaultFromPatient)}
+      onclick=${ChangeLabelStrategy(defaultFromPatient)}
     >
       By Date
+      <span class="btn btn-clear" href="#" role="button"></span>
+    </span>
+  `;
+
+const total = () =>
+  html`
+    <span
+      key="date"
+      class="chip c-hand"
+      onclick=${ChangeValueStrategy(ValueStrategies.INCREASE)}
+    >
+      Total
+      <span class="btn btn-clear" href="#" role="button"></span>
+    </span>
+  `;
+
+const increase = () =>
+  html`
+    <span
+      key="date"
+      class="chip c-hand"
+      onclick=${ChangeValueStrategy(ValueStrategies.TOTAL)}
+    >
+      Increase
       <span class="btn btn-clear" href="#" role="button"></span>
     </span>
   `;
@@ -93,7 +135,7 @@ const byDate = () =>
 export const chips = state =>
   html`
     <div class="m-2">
-      ${labelStrategyChip(state)}
+      ${labelStrategyChip(state)} ${valueStrategyChip(state)}
       ${Array.from(state.selectedCountries).map(name =>
         countryChip(name)(state)
       )}
