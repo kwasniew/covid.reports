@@ -154,11 +154,11 @@ const fromPatientNStrategy = ({ datasets, from, n }) => {
   const labels = toHumanDays(longestDatasetLength);
 
   if (from) {
-    const initialDaystoTrim = Number(from) - 1;
+    const initialDaysToTrim = Number(from) - 1;
     return {
-      labels: labels.slice(initialDaystoTrim),
+      labels: labels.slice(initialDaysToTrim),
       datasets: mapDatasets(
-        data => data.slice(initialDaystoTrim),
+        data => data.slice(initialDaysToTrim),
         trimmedDatasets
       )
     };
