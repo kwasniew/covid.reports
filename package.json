@@ -2,6 +2,7 @@
   "type": "module",
   "scripts": {
     "prebuild": "npm run snowpack",
+    "postinstall": "npm run snowpack",
     "build": "parcel build index.html",
     "test": "tape -r esm test/*Test.js | tap-diff",
     "snowpack": "snowpack --include '*.js'",
