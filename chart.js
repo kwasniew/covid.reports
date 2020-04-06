@@ -7,6 +7,7 @@ import prop from "./web_modules/lodash.property.js";
 import { html } from "./html.js";
 import { LabelStrategies, ValueStrategies } from "./state.js";
 import { update } from "./update.js";
+import { labelStrategyChip, valueStrategyChip } from "./chartControls.js";
 
 let chart;
 const updateChartData = data => {
@@ -207,18 +208,16 @@ export const UpdateChart = state => [
   }
 ];
 
-export const chartView = html`
+export const chartView = state => html`
   <div>
-    <figure class="figure">
+    <figure class="figure clearfix">
+      <div class="text-center">
+        ${valueStrategyChip(state)}
+      </div>
       <canvas id="chart"></canvas>
-      <figcaption class="figure-caption text-right text-normal">
-        <sup>
-          ${"*Data comes from "}
-          <a href="https://github.com/pomber/covid19">
-            https://github.com/pomber/covid19 </a
-          >${" and is updated three times a day. Hopefully it will contain number of tests in future."}
-        </sup>
-      </figcaption>
+      <div class="text-center">
+        ${labelStrategyChip(state)}
+      </div>
     </figure>
   </div>
 `;

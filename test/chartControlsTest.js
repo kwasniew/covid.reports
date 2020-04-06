@@ -3,7 +3,7 @@ import {
   RemoveFromSelector,
   ChangeLabelStrategy,
   SetFromPatient
-} from "../chips.js";
+} from "../chartControls.js";
 import {
   LabelStrategies,
   defaultByDate,

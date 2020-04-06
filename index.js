@@ -20,7 +20,7 @@ import { HistoryListen, ReadStateFromUrl } from "./history.js";
 
 const main = state => html`
   <${Container}>
-      ${chips(state)} ${chartView} ${select(state)} ${worldMap(state)} 
+      ${chips(state)} ${chartView(state)} ${select(state)} ${worldMap(state)} 
       ${chips(state)}
   </Container>
 `;
