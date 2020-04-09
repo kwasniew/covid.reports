@@ -111,7 +111,7 @@ export const table = state => html`
   ${timeFrameSwitch(state)}
         <table class="table">
           <tr class="sticky-header">
-            <th class="bg-gray"></th>
+            <th class="bg-gray index"></th>
             ${tableHeader("name", "Country")(state)}
             ${tableHeader("totalCases", "Total cases")(state)}
             ${tableHeader("lastCases", "Last cases")(state)}            

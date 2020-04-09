@@ -17,7 +17,12 @@ test("render table", t => {
     sortOrder: ["lastCases", "desc"]
   };
 
-  snapshot(table, state);
+  try {
+    snapshot(table, state)
+  } catch(e) {
+    t.fail(e);
+  } finally {
+    t.end();
+  }
 
-  t.end();
 });

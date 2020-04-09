@@ -32,6 +32,9 @@ path:hover{
     .sticky-header th {
         font-size: 0.8em;
     }
+    .index {
+        display: none;
+    }
 }
 
 .index {
