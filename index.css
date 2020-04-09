@@ -25,3 +25,7 @@ path:hover{
     border-bottom-width: 0; /* spectre was causing problems on safari */
     box-shadow: 0 2px 0px 0px rgba(0, 0, 0, 0.4)
 }
+
+.index {
+    font-size: 0.6em;
+}

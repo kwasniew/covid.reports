@@ -110,18 +110,20 @@ export const table = state => html`
   <div class="">${timeFrameSwitch(state)}</div>
         <table class="table">
           <tr class="sticky-header">
+            <th class="bg-gray"></th>
             ${tableHeader("name", "Country")(state)}
             ${tableHeader("totalCases", "Total cases")(state)}
             ${tableHeader("lastCases", "Last cases")(state)}            
             ${tableHeader("growth", "Growth rate")(state)}
           </tr>
           ${sortReport(state).map(
-            ({ name, growth, totalCases, lastCases }) => html`
+            ({ name, growth, totalCases, lastCases }, index) => html`
               <tr
                 class="c-hand"
                 onclick=${countryAction(state)(name)}
                 style=${countryHighlight(state)(name)}
               >
+                <td class="index">${index + 1}.</td>
                 <td>${chipOrName(name)(state)}</td>
                 <td>${totalCases}</td>
                 <td>${lastCases}</td>

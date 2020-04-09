@@ -1,9 +1,10 @@
 import test from "tape";
+import snap from "snap-shot";
 import { table } from "../table.js";
 import { renderToString } from "hyperapp-render";
-import cheerio from "cheerio";
-const render = (table, state) => cheerio.load(renderToString(table, state));
-import { selectors } from "./selectors.js";
+import pretty from "pretty";
+
+const snapshot = (view, state) => snap(pretty(renderToString(view, state)));
 
 test("render table", t => {
   const state = {
@@ -16,16 +17,7 @@ test("render table", t => {
     sortOrder: ["lastCases", "desc"]
   };
 
-  const $ = render(table, state);
-  const { $table, $row, $textIn } = selectors($);
-  const $chip = $textIn(".chip");
-
-  const { actual, expected } = $table([
-    $row(["Country", "Total cases", "Last cases ▼", "Growth rate"]),
-    $row(["Italy", "80", "60", "200%"]),
-    $row([$chip("China"), "100", "10", "50%"])
-  ]);
-  t.deepEqual(actual, expected, "table matches expected shape");
+  snapshot(table, state);
 
   t.end();
 });
