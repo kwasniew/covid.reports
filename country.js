@@ -57,7 +57,7 @@ export const countryChip = name => state => html`
 
 export const countryChips = state =>
   html`
-    <div class="m-2">
+    <div class="m-2 country-chips">
       ${Array.from(state.selectedCountries).map(name =>
         countryChip(name)(state)
       )}

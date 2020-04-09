@@ -38,4 +38,8 @@ path:hover{
     font-size: 0.6em;
 }
 
+.country-chips {
+    min-height: 28px;
+}
+
 
