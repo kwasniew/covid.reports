@@ -39,13 +39,15 @@ export const countryHighlight = state => country => {
   }
 };
 
+const truncate = name => name.length > 15 ? name.substring(0, 12) + "..." : name;
+
 export const countryChip = name => state => html`
   <span
     class="chip c-hand"
     onclick=${countryAction(state)(name)}
     style=${countryHighlight(state)(name)}
   >
-    ${name}
+    ${truncate(name)}
     <span
       class="btn btn-clear"
       href="#"
