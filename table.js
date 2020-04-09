@@ -100,14 +100,14 @@ const timeframeButton = (label, value, actual) =>
   `;
 
 const timeFrameSwitch = ({ days }) => html`
-  <div class="float-right btn-group btn-group-block col-5">
+  <div class="float-right btn-group btn-group-block col-5 m-2">
     ${timeframeButton("Weekly", 7, days)} ${timeframeButton("Daily", 1, days)}
   </div>
 `;
 
 export const table = state => html`
   <${Container} class="bg-gray">
-  <div class="">${timeFrameSwitch(state)}</div>
+  ${timeFrameSwitch(state)}
         <table class="table">
           <tr class="sticky-header">
             <th class="bg-gray"></th>
