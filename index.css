@@ -23,9 +23,19 @@ path:hover{
     z-index:2; /* chips were overlapping */
 
     border-bottom-width: 0; /* spectre was causing problems on safari */
-    box-shadow: 0 2px 0px 0px rgba(0, 0, 0, 0.4)
+    box-shadow: 0 2px 0px 0px rgba(0, 0, 0, 0.4);
+
+    vertical-align: top;
+}
+
+@media (max-width: 650px) {
+    .sticky-header th {
+        font-size: 0.8em;
+    }
 }
 
 .index {
     font-size: 0.6em;
 }
+
+
