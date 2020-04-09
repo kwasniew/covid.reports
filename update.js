@@ -8,4 +8,6 @@ export const update = state => [
   [UpdateChart(state), UpdateHistory(state)]
 ];
 
-export const updateWithoutHistory = state => [state, [UpdateChart(state)]];
+export const updateWithHistory = state => [state, [UpdateHistory(state)]];
+
+export const updateWithChart = state => [state, [UpdateChart(state)]];

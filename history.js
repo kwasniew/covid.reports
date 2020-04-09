@@ -1,6 +1,6 @@
 import { HistoryPop, HistoryPush } from "./web_modules/hyperapp-fx.js";
 import qs from "./web_modules/qs.js";
-import { update, updateWithoutHistory } from "./update.js";
+import { update, updateWithChart } from "./update.js";
 
 const settings = ({ report, ...rest }) => rest;
 
@@ -23,5 +23,5 @@ export const UpdateHistory = state =>
   HistoryPush({ state: settings(state), url: stateToUrl(state) });
 
 export const HistoryListen = HistoryPop({
-  action: (state, event) => updateWithoutHistory({ ...state, ...event.state })
+  action: (state, event) => updateWithChart({ ...state, ...event.state })
 });

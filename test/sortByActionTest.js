@@ -6,8 +6,8 @@ test("change between asc and desc", t => {
     sortOrder: ["name", "asc"]
   };
 
-  const newState1 = SortBy("name")(oldState);
-  const newState2 = SortBy("name")(newState1);
+  const [newState1] = SortBy("name")(oldState);
+  const [newState2] = SortBy("name")(newState1);
 
   t.deepEqual(newState1, { sortOrder: ["name", "desc"] });
   t.deepEqual(newState2, { sortOrder: ["name", "asc"] });
@@ -20,7 +20,7 @@ test("change of sort criteria to desc", t => {
     sortOrder: ["name", "asc"]
   };
 
-  const newState = SortBy("totalCases")(oldState);
+  const [newState] = SortBy("totalCases")(oldState);
 
   t.deepEqual(newState, { sortOrder: ["totalCases", "desc"] });
 
@@ -32,7 +32,7 @@ test("change of sort criteria to name is always asc", t => {
     sortOrder: ["totalCases", "irrelevant"]
   };
 
-  const newState = SortBy("name")(oldState);
+  const [newState] = SortBy("name")(oldState);
 
   t.deepEqual(newState, { sortOrder: ["name", "asc"] });
 

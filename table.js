@@ -11,6 +11,7 @@ import {
 } from "./country.js";
 import { addCustomStatsToReport } from "./stats.js";
 import cc from "./web_modules/classcat.js";
+import { updateWithHistory } from "./update.js";
 
 export const sortReport = ({ report, sortOrder: [sortBy, asc] }) =>
   orderBy(
@@ -30,7 +31,7 @@ const negateOrder = order => (order === "asc" ? "desc" : "asc");
 
 export const SortBy = newSortBy => state => {
   const [oldSortBy, oldDirection] = state.sortOrder;
-  return {
+  return updateWithHistory({
     ...state,
     sortOrder: [
       newSortBy,
@@ -40,7 +41,7 @@ export const SortBy = newSortBy => state => {
         ? "asc"
         : "desc"
     ]
-  };
+  });
 };
 
 const tableHeader = (name, text) => state => {
@@ -82,7 +83,7 @@ const SetStatsDays = days => state => {
     reportType: state.reportType,
     days
   });
-  return { ...state, report, days: Number(days) };
+  return updateWithHistory({ ...state, report, days: Number(days) });
 };
 
 const timeframeButton = (label, value, actual) =>
